@@ -7,6 +7,15 @@
 </head>
 <body>
     <div id="root"></div>
+
+    <script type="module">
+        import RefreshRuntime from "{{ env('VITE_SERVER_HOST', 'http://localhost:3000') }}/@@react-refresh"
+        RefreshRuntime.injectIntoGlobalHook(window)
+        window.$RefreshReg$ = () => {}
+        window.$RefreshSig$ = () => (type) => type
+        window.__vite_plugin_react_preamble_installed__ = true
+    </script>
+
     @vite
 </body>
 </html>

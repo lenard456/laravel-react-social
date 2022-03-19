@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    @apply min-h-screen bg-gray-50 text-gray-700 font-sans;
+}
+
+/* Antd Overrides  */
+.ant-form-vertical .ant-form-item-label, 
+.ant-col-24.ant-form-item-label, 
+.ant-col-xl-24.ant-form-item-label
+{
+    padding: 0 0 4px; /* Reduce Input Label Padding Bottom  */
+}

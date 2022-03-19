@@ -1,5 +1,21 @@
 # Laravel React Social Network
 
+## Tech Stack
+1. Front-end
+    - ReactJS
+    - React Router Dom
+    - TailwindCSS
+    - Ant Design
+    - ViteJS
+2. Back-end
+    - PHP
+    - Laravel
+    - MySQL
+3. APIs
+    - Axios
+    - Pusher
+    - 
+
 
 ### File Structure
     - Description about different folders and files contained in this project
