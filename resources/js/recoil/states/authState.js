@@ -1,13 +1,13 @@
 import { atom, useRecoilValue } from 'recoil'
-import Cache from 'js-cache'
+import { Cache } from '@/js/utils'
 
 window.Cache = Cache
 
-export default authState = atom({
+const authState = atom({
     key: 'auth',
     default: {
-        currentUser: Cache.get('auth'),
-        isValidated: !!Cache.get('auth_validated')
+        currentUser: Cache.get('auth', null),
+        isValidated: Cache.get('auth_validated', false)
     }
 })
 
@@ -21,3 +21,5 @@ export function useAuthState() {
         isValidated
     }
 }
+
+export default authState

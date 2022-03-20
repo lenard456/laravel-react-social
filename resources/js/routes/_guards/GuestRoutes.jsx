@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { useAuthState } from '@/js/states/authState'
+import { useAuthState } from '@/js/recoil/states/authState'
 
 export default function () 
 {
