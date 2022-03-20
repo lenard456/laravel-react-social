@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Card, Input, Button, Checkbox, Form } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 
@@ -9,23 +9,13 @@ import useLogin from './useLogin'
 
 export default function Login()
 {
-
-    const navigate = useNavigate()
-    const { user, isLoading, validationErrors, login } = useLogin()
-
-    useEffect(() => {
-
-        if (!user) return
-
-        navigate('/')
-
-    }, [user])
+    const { isLoading, validationErrors, handleSubmit } = useLogin()
 
     return (
         <div className="py-8">
             <Card title={<Header/>} className='max-w-md mx-auto rounded'>
 
-                <Form layout='vertical' onFinish={login}>
+                <Form layout='vertical' onFinish={handleSubmit}>
                     <Form.Item 
                         rules={rules.email} 
                         className='mb-4' 
@@ -73,48 +63,8 @@ export default function Login()
                         </p>
                     </Form.Item>
 
+
                 </Form>
-
-{/*                <form>
-
-                    <div className=''>
-                        <label className='text-sm'>Email</label>
-                        <Input 
-                            prefix={<MailOutlined />}
-                            className='rounded'
-                            type="email" 
-                            placeholder="Enter your email here." 
-                            size='large'
-                        />
-                    </div>
-
-                    <div className='mt-4'>
-                        <label className='text-sm'>Password</label>
-                        <Input.Password
-                            prefix={<LockOutlined />}
-                            className='rounded'
-                            placeholder="Enter your password here." 
-                            size='large'
-                        />
-                    </div>
-
-                    <div className='mt-4 flex justify-between'>
-                        <Checkbox>Remember me</Checkbox>
-
-                        <a href='#'>Forgot Password</a>
-                    </div>
-
-                    <div className='mt-4'>
-                        <Button size='large' type='primary' htmlType='submit' className='w-full'>
-                            Sign In
-                        </Button>
-                        <p className='mt-2 text-center'>
-                            Don't have an account? Sign up 
-                            <Link to='/register'> here</Link>
-                        </p>
-                    </div>
-
-                </form>*/}
             </Card>
         </div>
     )
