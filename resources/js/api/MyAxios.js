@@ -7,7 +7,7 @@ const MyAxios = axios.create({
 })
 
 MyAxios.defaults.withCredentials = true;
-console.log(MyAxios)
+
 export const getCookie = async() => {
     return Cookies.get('XSRF-TOKEN') || await MyAxios.get('/csrf-cookie')
 }
@@ -24,3 +24,6 @@ export const handlePromise = async(promise) => {
 }
 
 export default MyAxios
+
+window.MyAxios = MyAxios
+window.Cookies = Cookies

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { message, Card, Input, Button, Checkbox, Form, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons';
 
-import { Header } from '@/js/components'
+import { Logo } from '@/js/components'
 import rules from './rules'
 import useRegister from './useRegister'
 
@@ -23,7 +23,7 @@ export default function Register()
 
     return (
         <div className="py-8">
-            <Card title={<Header/>} className='max-w-md mx-auto rounded'>
+            <Card title={<Logo/>} className='max-w-md mx-auto rounded'>
                 <Form layout='vertical' onFinish={register}>
 
                     <Form.Item 

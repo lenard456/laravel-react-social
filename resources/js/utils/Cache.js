@@ -16,15 +16,15 @@ export default {
             return fallback;
         
         //Check expiration
-        if (data.ttl) {
+        if (data?.ttl) {
             let expiration = data.ttl
             if(expiration - Date.now() < 0) {
-                this.clear(key)
+                localStorage.removeItem(key)
                 return fallback;
             } 
         }
 
-        return data.value
+        return data?.value
     },
 
     set: (key, value, ttl = null) => {

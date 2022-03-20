@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { errorHandler } from '@/js/utils'
-import User from '@/js/api/User'
+import * as User from '@/js/api/User'
 
 export default function() {
     const [user, setUser] = useState(null)

@@ -7,10 +7,14 @@ export const register = (formData) => {
 export const login = async(formData) => {
     await getCookie()
     return MyAxios.post('/login', formData)
-    //return handlePromise(MyAxios.post('/login', formData));
 }
 
-export default {
-    register,
-    login
+export const getCurrentUser = async() => {
+    await getCookie()
+    return MyAxios.get('/user')
+}
+
+export const logout = async() => {
+    await getCookie()
+    return await MyAxios.post('/logout');
 }

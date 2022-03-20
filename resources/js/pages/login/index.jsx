@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Card, Input, Button, Checkbox, Form } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 
-import { Header } from '@/js/components'
+import { Logo } from '@/js/components'
 import rules from './rules'
 import useLogin from './useLogin'
 
@@ -13,7 +13,7 @@ export default function Login()
 
     return (
         <div className="py-8">
-            <Card title={<Header/>} className='max-w-md mx-auto rounded'>
+            <Card title={<Logo/>} className='max-w-md mx-auto rounded'>
 
                 <Form layout='vertical' onFinish={handleSubmit}>
                     <Form.Item 
