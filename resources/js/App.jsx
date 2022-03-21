@@ -1,11 +1,14 @@
-import { RecoilRoot } from 'recoil'
 import Routes from './routes'
-
+import { AuthProvider } from '@contexts/AuthContext'
+import { ReactQueryDevtools } from 'react-query-devtools'
 
 export default function() {
     return (
-        <RecoilRoot>
+        <>
+        <AuthProvider>
             <Routes />
-        </RecoilRoot>
+        </AuthProvider>
+        <ReactQueryDevtools initialIsOpen={false}/>
+        </>
     )
 }

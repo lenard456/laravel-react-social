@@ -3,7 +3,9 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - init: npm install && npm run build
+  - init: sudo add-apt-repository ppa:ondrej/php && \
+          sudo install-packages php8.1 php8.1-dom php8.1-sqlite3 php8.1-curl\
+          npm install
     command: npm run dev
 
 

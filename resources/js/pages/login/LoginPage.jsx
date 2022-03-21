@@ -37,7 +37,7 @@ export default () => {
                         {...(validationErrors.password)}
                         >
                         <Input.Password
-                            prefix={<LockOutlined />}
+                            prefix={<LockOutlined className='mr-2'/>}
                             className='rounded'
                             placeholder="Enter your password here." 
                             size='large'

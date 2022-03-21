@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
-export default const Http = axios.create({
+const Http = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 })
 
@@ -12,3 +12,5 @@ export const requestCookie = async () => {
 }
 
 export const sleep = (duration) => new Promise(resolve => setTimeout(resolve, duration))
+
+export default Http

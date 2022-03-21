@@ -27,11 +27,19 @@ const get = function(key, fallback) {
 }
 
 const set = function(key, value, ttl = null) {
-    const cache = JSON.stringify({value, expiration: Date.now() + ttl})
+    let expiration = ttl === null ? null : Date.now() + ttl;
+    const cache = JSON.stringify({value, expiration})
     localStorage.setItem(key, cache)
+    return value
+}
+
+const remove = function(key, value) {
+    localStorage.removeItem(key)
+    return value
 }
 
 export default {
     get,
-    set
+    set,
+    remove
 }

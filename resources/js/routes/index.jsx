@@ -1,32 +1,25 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
-// import AuthRoutes from './_guards/AuthRoutes'
-// import GuestRoutes from './_guards/GuestRoutes'
-
-//import MainLayout from '@/js/components/MainLayout'
-
-//import HomePage from '@/js/pages/home'
-//import LoginPage from '@/js/pages/login'
-//import RegisterPage from '@/js/pages/register'
+import AuthenticatedUserOnly from './_guards/AuthenticatedUserOnly'
+import GuestOnly from './_guards/GuestOnly'
 import {
-    LoginPage
-} from '@pages'
+    LoginPage,
+    RegisterPage
+} from '@pages/'
+import { MainLayout } from '@components'
 
 export default () => (
     <BrowserRouter>
         <Routes>
-
-{/*            <Route path='/' element={<AuthRoutes/>}>
-                <Route path='' element={<MainLayout/>}>
-                    <Route index element={<HomePage />}/>
+            <Route path='/' element={<AuthenticatedUserOnly />}>
+                <Route path='' element={<MainLayout />}>
+                    <Route index element={<div>Home</div>} />
                 </Route>
-            </Route>*/}
+            </Route>
 
-            {/*<Route path='/' element={<GuestRoutes/>}>*/}
+            <Route path='/' element={<GuestOnly/>}>
                 <Route path='/login' element={<LoginPage />} />
-                {/*<Route path='/login' element={<LoginPage />} />*/}
-                {/*<Route path='/register' element={<RegisterPage />} />*/}
-            {/*</Route>*/}
+                <Route path='/register' element={<RegisterPage/>} />
+            </Route>
 
         </Routes>
     </BrowserRouter>

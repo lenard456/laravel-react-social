@@ -1,20 +1,52 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { AuthApi } from '@apis'
 import validationRules from './validationRules'
-import { useAuthApi } from '@apis'
+import { message } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@contexts/AuthContext'
 
 export default () => {
-    const { login } = useAuthApi(false)
-    const validationErrors = {}
+    const navigate = useNavigate()
+    const { setAuth } = useAuth()
+    const [validationErrors, setValidationErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false)
-    const isSuccess=false
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+        if (user) {
+            setAuth(user)
+            message.success('Login successfully')
+            navigate('/')
+        }
+    }, [user])
+
+    const handleValidationError = (error) => {
+        if(error?.response?.status !== 422) throw error
+
+        const { errors } = error.response.data
+
+        Object.keys(errors).forEach(field => {
+            errors[field] = {
+                validateStatus: 'error',
+                help: errors[field].join(',')
+            }
+        })
+
+        setValidationErrors(errors)
+
+        return {}
+    }
 
     const handleSubmit = async (formData) => {
         setIsLoading(true)
 
         try{
-            await login()
+            const {data} = await AuthApi.login(formData).catch(handleValidationError)
+            if (data) {
+                setUser(data)
+            }
         } catch (error) {
-            console.log(Error)
+            console.log(error)
         }
 
         setIsLoading(false)
@@ -24,7 +56,6 @@ export default () => {
         handleSubmit,
         rules: validationRules,
         validationErrors,
-        isLoading,
-        isSuccess
+        isLoading
     }
 }

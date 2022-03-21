@@ -17,10 +17,15 @@
         ],
         "baseUrl": ".",
         "paths": {
-            "@/*": [
-                "resources/*"
-            ]
-        }
+            "@/*": ["resources/*"],
+            "@components/*": ["resources/js/components/*"],
+            "@apis/*": ["resources/js/apis/*"],
+            "@contexts/*": ["resources/js/contexts/*"],
+            "@pages/*": ["resources/js/pages/*"],
+            "@routes/*": ["resources/js/routes/*"],
+            "@utils/*": ["resources/js/utils/*"]
+        },
+        "allowJs": true
     },
     "include": [
         "resources/**/*"
