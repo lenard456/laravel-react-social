@@ -4,7 +4,7 @@ import { Cache } from '@/js/utils'
 window.Cache = Cache
 
 const authState = atom({
-    key: 'auth',
+    key: 'auth1',
     default: {
         currentUser: Cache.get('auth', null),
         isValidated: Cache.get('auth_validated', false)

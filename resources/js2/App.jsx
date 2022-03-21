@@ -1,11 +1,11 @@
 import { RecoilRoot } from 'recoil'
-import Routes from './routes'
+import Router from './routes/Router'
 
 
 export default function() {
     return (
         <RecoilRoot>
-            <Routes />
+            <Router />
         </RecoilRoot>
     )
 }

@@ -1,35 +1,37 @@
 
-export default {
+const getFallback = (fallback) => {
+    return typeof fallback === 'function' ? fallback() : fallback;
+}
 
-    clear: function(key) {
-        localStorage.removeItem(key)
-    },
-
-    get: (key, fallback = null) => {
-        //resolve fallback
-        fallback = typeof fallback === 'function' ? fallback() : fallback;
-
-        const data = JSON.parse(localStorage.getItem(key));
-        
-        //If No Cache Data
-        if (data === null) 
-            return fallback;
-        
-        //Check expiration
-        if (data?.ttl) {
-            let expiration = data.ttl
-            if(expiration - Date.now() < 0) {
-                localStorage.removeItem(key)
-                return fallback;
-            } 
-        }
-
-        return data?.value
-    },
-
-    set: (key, value, ttl = null) => {
-        value = typeof value == 'function' ? value() : value;
-        const data = {value, ttl: ttl ? ttl + Date.now() : null}
-        localStorage.setItem(key, JSON.stringify(data));
+const hasExpired = (expiration) => {
+    if (expiration) {
+        const remainingTime = expiration - Date.now()
+        return remainingTime < 0
     }
+    return false
+}
+
+const get = function(key, fallback) {
+    const cache = JSON.parse(localStorage.getItem(key))
+
+    //No cache
+    if (!cache || typeof cache !== 'object') return getFallback(fallback);
+
+    //Extract data
+    const { value, expiration } = cache
+
+    //Check if expired
+    if (hasExpired(expiration)) return getFallback(fallback)
+
+    return value;
+}
+
+const set = function(key, value, ttl = null) {
+    const cache = JSON.stringify({value, expiration: Date.now() + ttl})
+    localStorage.setItem(key, cache)
+}
+
+export default {
+    get,
+    set
 }

@@ -9,6 +9,16 @@ export default function({mode}){
         react(),
         laravel()
       ],
+
+      resolve: {
+        alias: [
+          {find: '@utils', replacement: '@/js/utils'},
+          {find: '@pages', replacement: '@/js/pages'},
+          {find: '@components', replacement: '@/js/components'},
+          {find: '@apis', replacement: '@/js/apis'}
+        ]
+      },
+
       server:{
         hmr: {
           host: process.env.VITE_HMR_HOST || 'localhost',

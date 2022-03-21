@@ -1,21 +1,23 @@
-import { useEffect } from 'react'
-import { usePostState } from '@/js/recoil/states/postState'
-import { usePostAction } from '@/js/recoil/actions'
+import { atom } from 'recoil'
+import { useEffect, useState } from 'react'
 import CreatePost from './components/CreatePost'
 import Post from './components/Post'
+import { fetchPosts } from '@/js/api/Post'
+
 
 export default function() {
 
-    const { feeds, posts, feedsIds } = usePostState()
-    const { fetchPosts } = usePostAction()
+    const [ isFetching, setIsFetching] = useState(false)
+    const [ posts, setPosts ] = useState([])
 
     useEffect(() => {
-        fetchPosts()
+        ;(async() => {
+            setIsFetching(true)
+            const { data } = await fetchPosts()
+            setPosts(data.data)
+            setIsFetching(false)
+        })()
     }, [])
-
-    useEffect(() => {
-        console.log({feeds, posts, feedsIds})
-    }, [feeds, posts, feedsIds])
 
     return (
         <div className='max-w-4xl mx-auto mt-8 grid grid-cols-5 gap-8'>
@@ -25,7 +27,7 @@ export default function() {
                 <div className='space-y-4'>
                     <CreatePost />
 
-                    {feeds.map(post => <Post key={post.id} post={post}/>)}
+                    {posts.map(post => <Post key={post.id} post={post}/>)}
 
                 </div>
 
