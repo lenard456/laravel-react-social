@@ -1,11 +1,13 @@
+import Routes from './routes'
+import { AuthProvider } from '@contexts/AuthContext'
 import { RecoilRoot } from 'recoil'
-import Router from './routes/Router'
-
 
 export default function() {
     return (
         <RecoilRoot>
-            <Router />
+            <AuthProvider>
+                <Routes />
+            </AuthProvider>
         </RecoilRoot>
     )
 }

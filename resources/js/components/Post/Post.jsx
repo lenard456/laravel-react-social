@@ -4,7 +4,6 @@ import { UserOutlined, LikeOutlined, CommentOutlined } from '@ant-design/icons'
 
 export default function({ children, post }) {
 
-    console.log(post)
     const { user, content } = post
 
     return (

@@ -1,18 +1,16 @@
-import { useEffect } from 'react'
+import { Card, Form, Input, Button, Checkbox } from 'antd'
+import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
-import { Card, Input, Button, Checkbox, Form } from 'antd';
-import { MailOutlined, LockOutlined } from '@ant-design/icons';
+import { Logo } from '@components'
+import useLoginLogic from './useLoginLogic'
+import rules from './validationRules'
 
-import { Logo } from '@/js/components'
-import rules from './rules'
-import useLogin from './useLogin'
+export default () => {
 
-export default function Login()
-{
-    const { isLoading, validationErrors, handleSubmit } = useLogin()
+    const { handleSubmit, validationErrors, isLoading } = useLoginLogic()
 
     return (
-        <div className="py-8">
+       <div className="py-8">
             <Card title={<Logo/>} className='max-w-md mx-auto rounded'>
 
                 <Form layout='vertical' onFinish={handleSubmit}>
@@ -40,7 +38,7 @@ export default function Login()
                         {...(validationErrors.password)}
                         >
                         <Input.Password
-                            prefix={<LockOutlined />}
+                            prefix={<LockOutlined className='mr-2'/>}
                             className='rounded'
                             placeholder="Enter your password here." 
                             size='large'

@@ -9,7 +9,19 @@ export default function({mode}){
         react(),
         laravel()
       ],
+
+      resolve: {
+        alias: [
+          {find: '@utils', replacement: '/resources/js/utils'},
+          {find: '@pages', replacement: '/resources/js/pages'},
+          {find: '@components', replacement: '/resources/js/components'},
+          {find: '@apis', replacement: '/resources/js/apis'},
+          {find: '@contexts', replacement: '/resources/js/contexts'}
+        ]
+      },
+
       server:{
+        host: 'localhost',
         hmr: {
           host: process.env.VITE_HMR_HOST || 'localhost',
           port: process.env.VITE_HMR_PORT || 3000

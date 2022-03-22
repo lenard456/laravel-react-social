@@ -1,25 +1,13 @@
-import { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { message, Card, Input, Button, Checkbox, Form, Spin } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons';
-
-import { Logo } from '@/js/components'
-import rules from './rules'
-import useRegister from './useRegister'
+import { Link } from 'react-router-dom'
+import { Card, Input, Button, Form, message } from 'antd'
+import { Logo } from '@components'
+import rules from './validationRules'
+import useRegistrationLogic from './useRegistrationLogic'
 
 export default function Register() 
 {
 
-    const navigate = useNavigate()
-    const { isLoading, validationErrors, user, register } = useRegister()
-
-    useEffect(() => {
-        if (!user) return
-        message.success('Account successfully created, you will be redirected to the login page.', 5)
-        setTimeout(() => {
-            navigate('/login')
-        }, 2000)
-    }, [user])
+    const { register, isLoading, validationErrors } = useRegistrationLogic()
 
     return (
         <div className="py-8">

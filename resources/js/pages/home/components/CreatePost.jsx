@@ -1,27 +1,32 @@
-import { useState } from 'react'
-import { Avatar, Input, Button } from 'antd'
+import { useState, useEffect } from 'react'
+import { Avatar, Input, Button, message } from 'antd'
 import { UserOutlined, CameraFilled } from '@ant-design/icons'
-import { usePostAction } from '@/js/recoil/actions'
+import { useFetch } from '@/js/utils'
+import { createPost } from '@/js/apis/PostApi' 
+import { useFeedState } from '@/js/states'
+import { useAuth } from '@/js/contexts/AuthContext'
 
-export default function () {
+export default function(){
+    const { currentUser } = useAuth()
+    const { prependPosts } = useFeedState()
+    const [ content, setContent ] = useState('')
+    const { data, isLoading, execute, status, error } = useFetch(createPost)
 
-    const [isLoading, setIsLoading] = useState(false)
-    const [content, setContent] = useState('')
-    const { createPost } = usePostAction()
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        if (isLoading) return
-
-        setIsLoading(true)
-
-        try {
-            await createPost(content)
-        } catch(e) { console.log(e) }
-        finally {
-            setIsLoading(false)
+    useEffect(() => {
+        if (status === 'success') {
+            message.success('Successfully posted')
             setContent('')
+            prependPosts({...data, user: currentUser})
+        } else if (status === 'error') {
+            message.error('An error occured') 
+            console.log(error)           
         }
+    },[status])
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if (isLoading || content.trim().length === 0) return;
+        execute(content)
     }
 
     return (

@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import { Avatar, Input, Button, Dropdown, } from 'antd'
-import { UserOutlined, SearchOutlined, MessageOutlined, BellOutlined } from '@ant-design/icons'
+import { Input, Button } from 'antd'
+import { SearchOutlined, MessageOutlined, BellOutlined } from '@ant-design/icons'
 import HeaderAvatar from './HeaderAvatar'
 
 export default function() {
