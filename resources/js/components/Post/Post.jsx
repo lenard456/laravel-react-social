@@ -4,7 +4,7 @@ import { UserOutlined, LikeOutlined, CommentOutlined } from '@ant-design/icons'
 
 export default function({ children, post }) {
 
-    const { user, content } = post
+    const { id, user, content } = post
 
     return (
         <div className='flex flex-col w-full sm:rounded-lg bg-white border border-solid p-4 pb-1 border-gray-300'>
@@ -31,7 +31,7 @@ export default function({ children, post }) {
                 <button  className='cursor-pointer flex-grow py-1 bg-white hover:bg-gray-100 rounded-full'>
                     <LikeOutlined />
                 </button>
-                <Link to='/posts/1' className='flex-grow py-1 text-center bg-white hover:bg-gray-100 rounded-full'><CommentOutlined /></Link>
+                <Link to={`/posts/${id}`} className='flex-grow py-1 text-center bg-white hover:bg-gray-100 rounded-full'><CommentOutlined /></Link>
             </div>
 
             {
