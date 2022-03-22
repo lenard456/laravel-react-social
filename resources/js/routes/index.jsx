@@ -3,7 +3,8 @@ import AuthenticatedUserOnly from './_guards/AuthenticatedUserOnly'
 import GuestOnly from './_guards/GuestOnly'
 import {
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    HomePage
 } from '@pages/'
 import { MainLayout } from '@components'
 
@@ -12,7 +13,7 @@ export default () => (
         <Routes>
             <Route path='/' element={<AuthenticatedUserOnly />}>
                 <Route path='' element={<MainLayout />}>
-                    <Route index element={<div>Home</div>} />
+                    <Route index element={<HomePage />} />
                 </Route>
             </Route>
 

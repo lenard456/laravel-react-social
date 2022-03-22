@@ -19,6 +19,6 @@ class PostController extends Controller
     {
         return Post::with(['user' => function($query) {
             $query->select(['id', 'name']);
-        }])->paginate(3);
+        }])->latest()->paginate(3);
     }
 }
