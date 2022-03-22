@@ -3,10 +3,11 @@ import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { Logo } from '@components'
 import useLoginLogic from './useLoginLogic'
+import rules from './validationRules'
 
 export default () => {
 
-    const { handleSubmit, rules, validationErrors, isLoading, isSuccess } = useLoginLogic()
+    const { handleSubmit, validationErrors, isLoading } = useLoginLogic()
 
     return (
        <div className="py-8">

@@ -1,10 +1,10 @@
 import { useAuth } from '@contexts/AuthContext'
 import { useEffect } from 'react'
 import { Outlet, Navigate, useNavigate } from 'react-router-dom'
-import { useQuery } from 'react-query'
 import AuthApi from '@apis/AuthApi'
 import { Spin, message } from 'antd'
 import { Logo } from '@components'
+import { useFetch } from '@utils'
 
 const Validating = () => {
     return (
@@ -17,42 +17,42 @@ const Validating = () => {
 
 export default function () {
     const navigate = useNavigate()
-    const {isAuthenticated, isValidated, invalidateSession } = useAuth()
-    const { error, refetch, status, isLoading, ...query } = useQuery('currentUser', AuthApi.fetchCurrentUser, {
-        enabled: false
-    })
+    const { isAuthenticated, isValidated, invalidateSession, setAuth } = useAuth()
+    const { isLoading, error, data:user, execute, status } = useFetch(AuthApi.fetchCurrentUser)
 
+    //OnMounted
     useEffect(() => {
         if (isAuthenticated && !isValidated) {
-            console.log({isAuthenticated, isValidated})
-            refetch()
-        }
-
-        return () => {
-            query.remove()
-        }
+            execute() //This validate if the user is actually log in
+        } 
     }, [])
 
+    //Status Changed
     useEffect(() => {
-        if (status == 'error') {
+        if (status === 'success') {
+            setAuth(user)
+        } else if (status === 'error') {
             if (error?.response?.status === 401) {
-                message.error('Session expired you need to login again')
+                message.error('Session expired: you need to login again.')
                 invalidateSession()
                 navigate('/login')
+            } else {
+                message.error('An unknown error occured');
             }
         }
-    }, [status, error])
+    }, [status])    
 
     if (!isAuthenticated) {
         return <Navigate to='/login' />
-    }    
+    }
 
     if (isLoading) {
         return <Validating />
     }
 
-    if (isAuthenticated && isValidated)
+    if (isAuthenticated && isValidated) {
         return <Outlet />
-    
-    return <div>error</div>
+    }
+
+    return null
 }

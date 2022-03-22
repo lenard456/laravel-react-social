@@ -1,43 +1,38 @@
 import { useState, useEffect } from 'react'
-import { AuthApi } from '@apis'
-import validationRules from './validationRules'
+import { AuthApi } from "@/js/apis";
+import { useFetch, mapValidationErrors } from "@/js/utils";
 import { message } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@contexts/AuthContext'
-import { useFetch, mapValidationErrors } from '@/js/utils'
 
 export default function()
 {
     const navigate = useNavigate()
-    const { setAuth } = useAuth()
-    const { data:user, error, isLoading, execute, status } = useFetch(AuthApi.login)
     const [validationErrors, setValidationErrors] = useState({})
- 
-    // On Status Changed
+    const { isLoading, execute, status, error } = useFetch(AuthApi.register)
+
     useEffect(() => {
         if (status === 'success') {
-            setAuth(user)
-            message.success('Login Successfully')
-            navigate('/')
+            message.success('Account created successfully')
+            navigate('/login')
         } else if (status === 'error') {
             if (error?.response?.status === 422) {
                 const { errors } = error.response.data
                 setValidationErrors(mapValidationErrors(errors))
             } else {
-                message.error('An unknown error occured');
+                message.error('An unknown error occured')
             }
         }
     }, [status])
 
-    const handleSubmit = (formData) => {
+    const register = (formData) => {
         if (isLoading) return;
         setValidationErrors({})
         execute(formData)
     }
 
     return {
-        handleSubmit,
-        validationErrors,
-        isLoading
+        register,
+        isLoading,
+        validationErrors
     }
 }

@@ -1,48 +1,13 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Card, Input, Button, Form, message } from 'antd'
 import { Logo } from '@components'
-import { AuthApi } from '@apis'
 import rules from './validationRules'
-import { mapValidationErrors } from '@utils'
+import useRegistrationLogic from './useRegistrationLogic'
 
 export default function Register() 
 {
-    const navigate = useNavigate()
-    const [isLoading, setIsLoading] = useState(false)
-    const [isSuccess, setIsSuccess] = useState(false)
-    const [validationErrors, setValidationErrors] = useState({})
-    const [error, setError] = useState(null)
 
-    useEffect(() => {
-        if (!isSuccess) return;
-        message.success('Account Registered successfully')
-        navigate('/login')
-    }, [isSuccess])
-
-    useEffect(() => {
-        if (error == null) return;
-
-        if (error?.response?.status === 422) {
-            const { errors } = error.response.data
-            setValidationErrors(mapValidationErrors(errors))
-            return;
-        }
-
-        message.error('An unknown error occured')
-    }, [error])
-
-    const register = (formData) => {
-        if (isLoading) return;
-        (async() => {
-            setIsLoading(true)
-            const [data, error] = await AuthApi.register(formData).then(response => [response.data, null]).catch(error => [null, error])
-            console.log({data, error})
-            if (data) setIsSuccess(true)
-            if (error) setError(error)
-            setIsLoading(false)
-        })()
-    }
+    const { register, isLoading, validationErrors } = useRegistrationLogic()
 
     return (
         <div className="py-8">
