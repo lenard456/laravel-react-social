@@ -17,8 +17,10 @@ class PostController extends Controller
 
     public function index()
     {
-        return Post::with(['user' => function($query) {
-            $query->select(['id', 'name']);
-        }])->latest()->paginate(3);
+        $id = Auth::id();
+        return Post::with('user')->whereHas('user.followers', function($query) use ($id) {
+            $query->where('follower_id', $id)
+                  ->orWhere('user_id', $id);
+        })->latest()->paginate(3);
     }
 }

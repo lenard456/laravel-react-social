@@ -1,42 +1,29 @@
 import { atom, useSetRecoilState } from 'recoil'
-import _ from 'lodash'
+import { deepMerge } from '@utils'
+import useUsersState from './useUsersState'
 
 export const postsState = atom({
     key: 'posts',
     default: {}
 })
-/**
- * {
- *    "1": {post},
- *    "2": {post}
- * }
- * 
- * [{post}, {post}, {post}]
- * 
- */
-const merge = (obj1, obj2) => {
-    let obj1Clone = _.cloneDeep(obj1) //To prevent mutation
-    return _.merge(obj1Clone, obj2)
-}
 
 
 const usePostsState = function() {
     const setPosts = useSetRecoilState(postsState)
+    const { updateUser } = useUsersState()
 
     const updatePosts = (newPosts) => {
         let objectNewPosts = newPosts.reduce((acm, post) => {
+            if (post.user) updateUser(post.user);
             return {...acm, [post.id]: {...post, isLike: post.isLike || false}}
         }, {})
 
         setPosts(posts => {
-            return merge(posts, objectNewPosts)
+            return deepMerge(posts, objectNewPosts)
         })
     }
 
-    const updatePost = (post) => {
-        console.log(post)
-        updatePosts([post])
-    }
+    const updatePost = (post) => updatePosts([post])
 
     return {
         updatePost,

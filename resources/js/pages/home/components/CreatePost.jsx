@@ -4,11 +4,11 @@ import { UserOutlined, CameraFilled } from '@ant-design/icons'
 import { useFetch } from '@/js/utils'
 import { createPost } from '@/js/apis/PostApi' 
 import { useFeedState } from '@/js/states'
-import { useAuth } from '@/js/contexts/AuthContext'
+import usePostsState from '@/js/states/usePostsState'
 
 export default function(){
-    const { currentUser } = useAuth()
-    const { prependPosts } = useFeedState()
+    const { updatePost } = usePostsState()
+    const { setPostIds } = useFeedState()
     const [ content, setContent ] = useState('')
     const { data, isLoading, execute, status, error } = useFetch(createPost)
 
@@ -16,7 +16,10 @@ export default function(){
         if (status === 'success') {
             message.success('Successfully posted')
             setContent('')
-            prependPosts({...data, user: currentUser})
+
+            //Prepend new posts
+            updatePost(data)
+            setPostIds(ids => [data.id, ...ids])
         } else if (status === 'error') {
             message.error('An error occured') 
             console.log(error)           

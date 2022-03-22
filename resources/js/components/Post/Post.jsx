@@ -2,10 +2,13 @@ import { Link } from 'react-router-dom'
 import { Avatar } from 'antd'
 import { UserOutlined, LikeOutlined, CommentOutlined } from '@ant-design/icons'
 import usePostsState from '@/js/states/usePostsState'
+import useUsersState from '@/js/states/useUsersState'
 
 export default function({ children, post }) {
     const { updatePost } = usePostsState()
-    const { id, user, content, isLike } = post
+    const { users } = useUsersState()
+    const { id, content, isLike, user_id } = post
+    const user = users[user_id]
 
     const toggleLike = () => {
         updatePost({ ...post, isLike: !isLike })

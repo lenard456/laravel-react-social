@@ -33,8 +33,8 @@ export default function () {
     const posts = useRecoilValue(feedPosts)
 
     const updateFeed = ({currentPage, lastPage, posts}) => {
-        setCurrentPage(currentPage)
-        setLastPage(lastPage)
+        setCurrentPage(oldValue => currentPage || oldValue)
+        setLastPage(oldValue => lastPage || oldValue)
         updatePosts(posts)
         setPostIds(postIds => {
             const newPostIds = posts.map(post => post.id)
@@ -47,6 +47,7 @@ export default function () {
         lastPage,
         postIds,
         posts,
-        updateFeed
+        updateFeed,
+        setPostIds
     }
 }

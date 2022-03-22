@@ -1,15 +1,17 @@
 import { createContext, useContext, useState, useMemo } from 'react'
 import { Cache } from '@utils'
+import useUsersState from '@/js/states/useUsersState'
 
 const AuthContext = createContext(null)
 
 export const AuthProvider = ({ children }) => {
-
+    const { updateUser } = useUsersState()
     const [currentUser, setCurrentUser] = useState(Cache.get('auth.user', null))
     const [isValidated, setIsValidated] = useState(Cache.get('auth.isValidated', false))
     const isAuthenticated = useMemo(() => !!currentUser, [currentUser])
 
     const setAuth = (user) => {
+        updateUser(user)
         setCurrentUser(Cache.set('auth.user',user))
         setIsValidated(Cache.set('auth.isValidated', true, 2*60*60*1000)) //Revalidated after 2hrs
     }
