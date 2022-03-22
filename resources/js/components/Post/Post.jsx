@@ -1,10 +1,15 @@
 import { Link } from 'react-router-dom'
 import { Avatar } from 'antd'
 import { UserOutlined, LikeOutlined, CommentOutlined } from '@ant-design/icons'
+import usePostsState from '@/js/states/usePostsState'
 
 export default function({ children, post }) {
+    const { updatePost } = usePostsState()
+    const { id, user, content, isLike } = post
 
-    const { id, user, content } = post
+    const toggleLike = () => {
+        updatePost({ ...post, isLike: !isLike })
+    }
 
     return (
         <div className='flex flex-col w-full sm:rounded-lg bg-white border border-solid p-4 pb-1 border-gray-300'>
@@ -28,8 +33,8 @@ export default function({ children, post }) {
             </div>
 
             <div className='flex gap-2 text-lg py-1 border-t border-gray-300'>
-                <button  className='cursor-pointer flex-grow py-1 bg-white hover:bg-gray-100 rounded-full'>
-                    <LikeOutlined />
+                <button onClick={toggleLike}  className='cursor-pointer flex-grow py-1 bg-white hover:bg-gray-100 rounded-full'>
+                    <LikeOutlined className={isLike ? 'text-blue-500' : ''}/>
                 </button>
                 <Link to={`/posts/${id}`} className='flex-grow py-1 text-center bg-white hover:bg-gray-100 rounded-full'><CommentOutlined /></Link>
             </div>

@@ -1,37 +1,52 @@
-import { atom, useRecoilState } from 'recoil'
+import { atom, useRecoilState, useRecoilValue, selector } from 'recoil'
+import usePostsState, { postsState } from './usePostsState'
 
-const feedState = atom({
-    key: 'feed',
-    default: {
-        currentPage: 0,
-        lastPage: null,
-        posts: []
+const currentPageState = atom({
+    key: 'feed.currentPage',
+    default: 0
+})
+
+const lastPageState = atom({
+    key: 'feed.lastPageState',
+    default: null
+})
+
+const postIdsState = atom({
+    key: 'feed.postIds',
+    default: []
+})
+
+const feedPosts = selector({
+    key: 'feed.posts',
+    get: ({get}) => {
+        let postIds = get(postIdsState)
+        let posts = get(postsState)
+        return postIds.map(id => posts[id])
     }
 })
 
-export default function() {
-    const [feed, setFeed] = useRecoilState(feedState)
-
-    const hasNext = feed.lastPage && feed.currentPage < feed.lastPage 
-
-    const prependPosts = (post) => {
-        setFeed(feed => {
-            return {
-                ...feed, 
-                posts: [post, ...feed.posts]
-            }
-        })
-    }
+export default function () {
+    const { updatePosts } = usePostsState()
+    const [currentPage, setCurrentPage] = useRecoilState(currentPageState)
+    const [lastPage, setLastPage] = useRecoilState(lastPageState)
+    const [postIds, setPostIds] = useRecoilState(postIdsState)
+    const posts = useRecoilValue(feedPosts)
 
     const updateFeed = ({currentPage, lastPage, posts}) => {
-        setFeed(({posts:oldPosts}) => {
-            return {
-                currentPage,
-                lastPage,
-                posts: [...oldPosts, ...posts]
-            }
+        setCurrentPage(currentPage)
+        setLastPage(lastPage)
+        updatePosts(posts)
+        setPostIds(postIds => {
+            const newPostIds = posts.map(post => post.id)
+            return _.union(postIds, newPostIds)
         })
     }
-
-    return { feed, updateFeed, setFeed, hasNext, prependPosts }
+    
+    return {
+        currentPage,
+        lastPage,
+        postIds,
+        posts,
+        updateFeed
+    }
 }

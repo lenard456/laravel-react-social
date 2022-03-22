@@ -8,27 +8,28 @@ import { Post } from '@/js/components'
 export default function () {
 
     const { data, execute, status } = useFetch(fetchFeed)
-    const { feed, updateFeed, hasNext } = useFeedState()
+    const { updateFeed, currentPage, lastPage, posts } = useFeedState()
+    const hasNext = lastPage && currentPage < lastPage
 
     useEffect(() => {
         if (status === 'success') {
             updateFeed({
-                posts: data.data,
                 currentPage: data.current_page,
-                lastPage: data.last_page
+                lastPage: data.last_page,
+                posts: data.data
             })
         }
     }, [status])
 
     //On Mounted
     useEffect(() => {
-        if (feed.currentPage === 0) {
+        if (currentPage === 0) {
             execute()
         }
     }, [])
 
     const seeMore = () => {
-        execute(feed.currentPage + 1)
+        execute(currentPage + 1)
     }
 
     return (
@@ -39,7 +40,7 @@ export default function () {
                 <div className='space-y-4'>
                     <CreatePost />
                     {
-                        feed.posts.map(post => (
+                        posts.map(post => (
                             <Post post={post} key={post.id} />
                         ))
                     }
