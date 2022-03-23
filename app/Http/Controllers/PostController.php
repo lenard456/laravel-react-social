@@ -15,6 +15,11 @@ class PostController extends Controller
         return $post;
     }
 
+    public function view(Post $post)
+    {
+        return $post;
+    }
+
     public function index()
     {
         $id = Auth::id();

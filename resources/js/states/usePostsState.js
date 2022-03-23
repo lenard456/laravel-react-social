@@ -1,4 +1,4 @@
-import { atom, useSetRecoilState } from 'recoil'
+import { atom, useRecoilState } from 'recoil'
 import { deepMerge } from '@utils'
 import useUsersState from './useUsersState'
 
@@ -7,9 +7,8 @@ export const postsState = atom({
     default: {}
 })
 
-
 const usePostsState = function() {
-    const setPosts = useSetRecoilState(postsState)
+    const [posts, setPosts] = useRecoilState(postsState)
     const { updateUser } = useUsersState()
 
     const updatePosts = (newPosts) => {
@@ -32,9 +31,20 @@ const usePostsState = function() {
     }
 
     return {
+        posts,
         updatePost,
         updatePosts,
         setPost
+    }
+}
+
+export const usePostState = function(id) {
+    const {  posts, setPost, updatePost } = usePostsState()
+    const post = posts[id]
+    return {
+        post,
+        setPost,
+        updatePost
     }
 }
 

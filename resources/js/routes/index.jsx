@@ -4,7 +4,8 @@ import GuestOnly from './_guards/GuestOnly'
 import {
     LoginPage,
     RegisterPage,
-    HomePage
+    HomePage,
+    PostPage
 } from '@pages/'
 import { MainLayout } from '@components'
 
@@ -14,6 +15,7 @@ export default () => (
             <Route path='/' element={<AuthenticatedUserOnly />}>
                 <Route path='' element={<MainLayout />}>
                     <Route index element={<HomePage />} />
+                    <Route path='posts/:id' element={<PostPage />} />
                 </Route>
             </Route>
 
