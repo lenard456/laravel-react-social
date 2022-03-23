@@ -12,6 +12,11 @@ export const createPost = async(content) => {
     return Http.post('/posts', {content})
 }
 
+export const likePost = async(post_id) => {
+    await requestCookie()
+    return Http.post(`/posts/${post_id}/like`);
+}
+
 export default {
     fetchFeed,
     createPost

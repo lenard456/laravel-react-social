@@ -11,8 +11,27 @@ class Post extends Model
 
     protected $fillable = ['user_id','content'];
 
+    protected $appends = ['likerIds'];
+
+    protected $hidden = ['likes'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likable');
+    }
+
+    public function getLikersAttribute()
+    {
+        return $this->likes()->with('user')->get()->pluck('user');
+    }
+
+    public function getLikerIdsAttribute()
+    {
+        return $this->likes->pluck('user_id');
     }
 }

@@ -9,9 +9,9 @@ export const AuthProvider = ({ children }) => {
     const { updateUser } = useUsersState()
     const { followingIds } = useFollowingState()
     const [currentUser, setCurrentUser] = useState(Cache.get('auth.user', null))
-    const [isValidated, setIsValidated] = useState(Cache.get('auth.isValidated', false))
-    const currentUserFollowing = followingIds[currentUser.id]
+    const [isValidated, setIsValidated] = useState(false)
     const isAuthenticated = !!currentUser
+    const currentUserFollowing = isAuthenticated ? followingIds[currentUser.id] : []
 
     const isFollowing = (user_id) => {
         return currentUserFollowing && currentUserFollowing.some(id => id == user_id)

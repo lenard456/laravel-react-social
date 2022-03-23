@@ -15,7 +15,7 @@ const usePostsState = function() {
     const updatePosts = (newPosts) => {
         let objectNewPosts = newPosts.reduce((acm, post) => {
             if (post.user) updateUser(post.user);
-            return {...acm, [post.id]: {...post, isLike: post.isLike || false}}
+            return {...acm, [post.id]: post}
         }, {})
 
         setPosts(posts => {

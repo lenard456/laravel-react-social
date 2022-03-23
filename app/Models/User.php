@@ -46,7 +46,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['avatar', 'followingIds', 'followerIds'];
+    protected $appends = ['avatar'];
 
     protected static function booted()
     {
@@ -130,5 +130,31 @@ class User extends Authenticatable
             'source' => 'url',
             'reference' => "https://avatars.dicebear.com/api/initials/$name.svg"
         ]);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function like($likable) {
+        if ($this->hasLiked($likable)) return $this;
+
+        (new Like())
+            ->user()->associate($this)
+            ->likable()->associate($likable)
+            ->save();
+
+        return $this;
+    }
+
+    public function hasLiked($likable)
+    {
+        if (! $likable->exists) return false;
+
+        return $likable
+            ->likes()
+            ->whereHas('user', fn($q) => $q->whereId($this->id))
+            ->exists();
     }
 }

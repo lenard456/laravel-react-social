@@ -23,4 +23,11 @@ class PostController extends Controller
                   ->orWhere('user_id', $id);
         })->latest()->paginate(3);
     }
+
+    public function like(Post $post)
+    {
+        Auth::user()->like($post);
+
+        return 'Post successfully liked';
+    }
 }

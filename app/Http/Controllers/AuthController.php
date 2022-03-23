@@ -19,7 +19,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return Auth::user();
+        return Auth::user()->append('followingIds', 'followerIds');
     }
 
 

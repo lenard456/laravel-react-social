@@ -4,6 +4,7 @@ import { useAuth } from '@/js/contexts/AuthContext'
 import useFollowingState from '@/js/states/useFollowingState'
 import { useFetch } from '@/js/utils'
 import { Avatar, Button } from 'antd'
+import { CheckOutlined } from '@ant-design/icons'
 import _ from 'lodash'
 
 export default function ({ user }) {
@@ -37,7 +38,12 @@ export default function ({ user }) {
                 <Avatar src={user.avatar} className='flex-shrink-0' />
                 <span>{user.name}</span>
             </div>
-            <Button loading={isLoading} onClick={handleClick}>{ isFollowing ? 'Following' : 'Follow' }</Button>
+            <Button 
+                className={isFollowing && `border-blue-400 text-blue-400`}
+                loading={isLoading} 
+                icon={ isFollowing && <CheckOutlined />}
+                onClick={handleClick}
+            >{ isFollowing ? 'Following' : 'Follow' }</Button>
         </div>
     )
 }

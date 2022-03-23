@@ -1,11 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useFeedState } from '@/js/states'
 import { fetchFeed } from '@/js/apis/PostApi'
 import { useFetch } from '@/js/utils'
 
 export default function()
 {
-    const { data, execute, status } = useFetch(fetchFeed)
+    const [initLoading, setInitLoading] = useState(false)
+    const { data, execute, status, isLoading } = useFetch(fetchFeed)
     const { updateFeed, currentPage, lastPage, posts } = useFeedState()
     const hasNext = lastPage && currentPage < lastPage
 
@@ -22,7 +23,10 @@ export default function()
     //On Mounted
     useEffect(() => {
         if (currentPage === 0) {
-            execute()
+            setInitLoading(true)
+            execute().then(() => {
+                setInitLoading(false)
+            })
         }
     }, [])
 
@@ -30,5 +34,5 @@ export default function()
         execute(currentPage + 1)
     }
 
-    return { posts, hasNext, seeMore }
+    return { posts, hasNext, seeMore, isLoading, initLoading }
 }

@@ -37,9 +37,7 @@ export default function({ children, post }) {
             </div>
 
             <div className='flex gap-2 text-lg py-1 border-t border-gray-300'>
-                <button onClick={toggleLike}  className='cursor-pointer flex-grow py-1 bg-white hover:bg-gray-100 rounded-full'>
-                    <LikeOutlined className={isLike ? 'text-blue-500' : ''}/>
-                </button>
+                <LikeButton />
                 <Link to={`/posts/${id}`} className='flex-grow py-1 text-center bg-white hover:bg-gray-100 rounded-full'><CommentOutlined /></Link>
             </div>
 
