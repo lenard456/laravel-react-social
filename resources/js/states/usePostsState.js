@@ -1,6 +1,7 @@
 import { atom, useRecoilState } from 'recoil'
 import { deepMerge } from '@utils'
 import useUsersState from './useUsersState'
+import usePostsCommentsState from './usePostsCommentsState'
 
 export const postsState = atom({
     key: 'posts',
@@ -9,11 +10,13 @@ export const postsState = atom({
 
 const usePostsState = function() {
     const [posts, setPosts] = useRecoilState(postsState)
+    const { updatePostComments } = usePostsCommentsState()
     const { updateUser } = useUsersState()
 
     const updatePosts = (newPosts) => {
-        let objectNewPosts = newPosts.reduce((acm, post) => {
-            if (post.user) updateUser(post.user);
+        let objectNewPosts = newPosts.reduce((acm, {user, comments, ...post}) => {
+            if (user) updateUser(user);
+            if (comments) updatePostComments(post.id, comments)
             return {...acm, [post.id]: post}
         }, {})
 

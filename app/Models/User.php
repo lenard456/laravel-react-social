@@ -150,6 +150,16 @@ class User extends Authenticatable
         return $this;
     }
 
+    public function comment($commentable, $content)
+    {
+        $comment = new Comment();
+        $comment->content = $content;
+        $comment->user()->associate($this);
+        $comment->commentable()->associate($commentable);
+        $comment->save();
+        return $this;
+    }
+
     public function hasLiked($likable)
     {
         if (! $likable->exists) return false;

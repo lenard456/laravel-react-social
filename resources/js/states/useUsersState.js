@@ -7,13 +7,13 @@ export const usersState = atom({
     default: {}
 })
 
-export default function() {
+const useUsersState = function() {
     const [users, setUsers] = useRecoilState(usersState)
     const { updateFollowingIds } = useFollowingState()
 
     const updateUsers = (newUsers) => {
-        let objectNewUsers = newUsers.reduce((acm, user) => {
-            if (user.followingIds) updateFollowingIds(user.id, user.followingIds);
+        let objectNewUsers = newUsers.reduce((acm, {followingIds, ...user}) => {
+            if (followingIds) updateFollowingIds(user.id, followingIds);
             return {...acm, [user.id]: user}
         }, {})
 
@@ -30,3 +30,15 @@ export default function() {
         updateUsers
     }
 }
+
+export const useUserState = function(userId)
+{
+    const { users } = useUsersState()
+    const user = users[userId]
+
+    return {
+        user
+    }
+} 
+
+export default useUsersState;

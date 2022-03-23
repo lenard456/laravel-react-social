@@ -15,9 +15,16 @@ class Post extends Model
 
     protected $hidden = ['likes'];
 
+    protected $with = ['user'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function likes()

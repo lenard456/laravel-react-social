@@ -7,9 +7,9 @@ export const fetchFeed = async(page = 1) => {
     })
 }
 
-export const fetchPost = async(post_id) => {
+export const fetchPost = async(postId) => {
     await requestCookie()
-    return Http.get(`/posts/${post_id}`);
+    return Http.get(`/posts/${postId}`);
 }
 
 export const createPost = async(content) => {
@@ -17,14 +17,19 @@ export const createPost = async(content) => {
     return Http.post('/posts', {content})
 }
 
-export const likePost = async(post_id) => {
+export const likePost = async(postId) => {
     await requestCookie()
-    return Http.post(`/posts/${post_id}/like`);
+    return Http.post(`/posts/${postId}/like`);
 }
 
-export const unLikePost = async(post_id) => {
+export const unLikePost = async(postId) => {
     await requestCookie()
-    return Http.post(`/posts/${post_id}/unlike`);
+    return Http.post(`/posts/${postId}/unlike`);
+}
+
+export const comment = async(postId, content) => {
+    await requestCookie()
+    return Http.post(`/posts/${postId}/comment`, {content})
 }
 
 export default {
