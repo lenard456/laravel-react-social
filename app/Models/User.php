@@ -13,6 +13,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $with = ['imageAvatar'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -32,6 +34,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'imageAvatar'
     ];
 
     /**
@@ -43,9 +46,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['avatar', 'followingIds', 'followerIds'];
+
+    protected static function booted()
+    {
+        static::created(function ($user) {
+
+            //Generate default Avatar
+            $user->regenerateAvatar();
+        });
+    }
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
+    }
+
+    public function getAvatarAttribute()
+    {
+        return $this->imageAvatar->url;
     }
 
     public function posts()
@@ -63,6 +82,26 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
     }
 
+    public function followerIds()
+    {
+        return $this->followers()->pluck('id');
+    }
+
+    public function getFollowerIdsAttribute()
+    {
+        return $this->followerIds();
+    }
+
+    public function followingIds()
+    {
+        return $this->following()->pluck('id');
+    }
+
+    public function getFollowingIdsAttribute()
+    {
+        return $this->followingIds();
+    }
+
     public function notFollowing()
     {
         /**
@@ -73,5 +112,23 @@ class User extends Authenticatable
         return User::whereDoesntHave('followers', function($q) use ($id) {
             $q->where('follower_id', $id);
         })->where('id', '<>', $id);
+    }
+
+    public function imageAvatar()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function regenerateAvatar()
+    {
+        //Delete if has avatar
+        $this->imageAvatar()->delete();
+
+        //Generate new
+        $name = strtolower(urlencode($this->name));
+        $this->imageAvatar()->create([
+            'source' => 'url',
+            'reference' => "https://avatars.dicebear.com/api/initials/$name.svg"
+        ]);
     }
 }

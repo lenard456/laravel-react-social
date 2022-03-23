@@ -20,4 +20,10 @@ class UserController extends Controller
         $user->followers()->attach(Auth::id());
         return 'Successfully followed';
     }
+
+    public function currentUser()
+    {
+        $user = Auth::user()->append('followingIds', 'followerIds');
+        return $user;
+    }
 }

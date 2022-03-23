@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Avatar } from 'antd'
-import { UserOutlined, LikeOutlined, CommentOutlined } from '@ant-design/icons'
+import { LikeOutlined, CommentOutlined } from '@ant-design/icons'
 import usePostsState from '@/js/states/usePostsState'
 import useUsersState from '@/js/states/useUsersState'
+import moment from 'moment'
 
 export default function({ children, post }) {
     const { updatePost } = usePostsState()
     const { users } = useUsersState()
-    const { id, content, isLike, user_id } = post
+    const { id, content, isLike, user_id, created_at } = post
     const user = users[user_id]
 
     const toggleLike = () => {
@@ -18,11 +19,11 @@ export default function({ children, post }) {
         <div className='flex flex-col w-full sm:rounded-lg bg-white border border-solid p-4 pb-1 border-gray-300'>
                 
             <div className='flex gap-2 items-center'>
-                <Avatar size='large' icon={<UserOutlined />} />
+                <Avatar size='large' src={user.avatar}/>
                 <div className='flex justify-between'>
                     <div className='flex flex-col leading-3'>
                         <span className='font-bold'>{ user.name} </span>
-                        <span className='text-sm'>2 hours ago</span>
+                        <span className='text-sm'>{ moment(created_at).fromNow() }</span>
                     </div>
                 </div>
             </div>
