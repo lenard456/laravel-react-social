@@ -1,19 +1,16 @@
 import { Link } from 'react-router-dom'
 import { Avatar } from 'antd'
-import { LikeOutlined, CommentOutlined } from '@ant-design/icons'
+import { CommentOutlined } from '@ant-design/icons'
 import usePostsState from '@/js/states/usePostsState'
 import useUsersState from '@/js/states/useUsersState'
 import moment from 'moment'
+import LikeButton from './LikeButton'
 
 export default function({ children, post }) {
-    const { updatePost } = usePostsState()
     const { users } = useUsersState()
-    const { id, content, isLike, user_id, created_at } = post
+    const { id, content, user_id, created_at, likerIds} = post
     const user = users[user_id]
-
-    const toggleLike = () => {
-        updatePost({ ...post, isLike: !isLike })
-    }
+    const likeCount = likerIds.length
 
     return (
         <div className='flex flex-col w-full sm:rounded-lg bg-white border border-solid p-4 pb-1 border-gray-300'>
@@ -32,12 +29,10 @@ export default function({ children, post }) {
                  { content }
             </div>
 
-            <div>
-                1 Like
-            </div>
+            { likeCount > 0 && <div>{likeCount} {likeCount > 1 ? 'Likes' : 'Like'}</div> }
 
             <div className='flex gap-2 text-lg py-1 border-t border-gray-300'>
-                <LikeButton />
+                <LikeButton post={post}/>
                 <Link to={`/posts/${id}`} className='flex-grow py-1 text-center bg-white hover:bg-gray-100 rounded-full'><CommentOutlined /></Link>
             </div>
 

@@ -27,7 +27,12 @@ class PostController extends Controller
     public function like(Post $post)
     {
         Auth::user()->like($post);
+        return $post->likerIds;
+    }
 
-        return 'Post successfully liked';
+    public function unlike(Post $post)
+    {
+        Auth::user()->unlike($post);
+        return $post->likerIds;
     }
 }

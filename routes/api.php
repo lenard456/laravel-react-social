@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'create']);
     Route::post('/posts/{post}/like', [PostController::class, 'like']);
+    Route::post('/posts/{post}/unlike', [PostController::class, 'unlike']);
 
     Route::post('/users/{user}/follow', [UserController::class, 'follow']);
     Route::get('/users/suggestions', [UserController::class, 'suggestions']);

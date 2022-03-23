@@ -19,10 +19,10 @@ const useFetch = function(promise, config) {
     const isError = status === STATUS_ERROR
     const isSuccess = status === STATUS_SUCCESS
     
-    const execute = async(params) => {
+    const execute = async(...params) => {
         try {
             setStatus(STATUS_LOADING)
-            const response = await promise(params)
+            const response = await promise(...params)
             setData(response.data)
             setStatus(STATUS_SUCCESS)
         } catch (error) {

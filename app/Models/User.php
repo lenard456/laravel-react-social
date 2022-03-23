@@ -82,24 +82,14 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
     }
 
-    public function followerIds()
+    public function getFollowerIdsAttribute()
     {
         return $this->followers()->pluck('id');
     }
 
-    public function getFollowerIdsAttribute()
-    {
-        return $this->followerIds();
-    }
-
-    public function followingIds()
-    {
-        return $this->following()->pluck('id');
-    }
-
     public function getFollowingIdsAttribute()
     {
-        return $this->followingIds();
+        return $this->following()->pluck('id');
     }
 
     public function notFollowing()
@@ -137,7 +127,19 @@ class User extends Authenticatable
         return $this->hasMany(Like::class);
     }
 
-    public function like($likable) {
+    public function unlike($likable)
+    {
+        if (! $this->hasLiked($likable)) return $this;
+
+        $likable->likes()
+            ->whereHas('user', fn($q) => $q->whereId($this->id))
+            ->delete();
+        
+        return $this;
+    }
+
+    public function like($likable) 
+    {
         if ($this->hasLiked($likable)) return $this;
 
         (new Like())

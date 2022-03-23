@@ -25,9 +25,16 @@ const usePostsState = function() {
 
     const updatePost = (post) => updatePosts([post])
 
+    const setPost = (post) => {
+        setPosts(posts => {
+            return {...posts, [post.id] : post}
+        })
+    }
+
     return {
         updatePost,
-        updatePosts
+        updatePosts,
+        setPost
     }
 }
 
