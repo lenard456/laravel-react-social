@@ -15,6 +15,7 @@ export default () => (
             <Route path='/' element={<AuthenticatedUserOnly />}>
                 <Route path='' element={<MainLayout />}>
                     <Route index element={<HomePage />} />
+                    <Route path='/users/:id' element={<div>UserProfile</div>} />
                     <Route path='posts/:id' element={<PostPage />} />
                 </Route>
             </Route>

@@ -1,28 +1,22 @@
 import { useState, useEffect } from 'react'
-import { Avatar, Input, Button, message } from 'antd'
+import { Avatar, Input, Button } from 'antd'
 import { UserOutlined, CameraFilled } from '@ant-design/icons'
-import { useFetch } from '@/js/utils'
 import { createPost } from '@/js/apis/PostApi' 
 import { useFeedState } from '@/js/states'
-import usePostsState from '@/js/states/usePostsState'
+import { useApi } from '@/js/hooks'
 
 export default function(){
-    const { updatePost } = usePostsState()
-    const { setPostIds } = useFeedState()
+    const { dispatch } = useFeedState()
     const [ content, setContent ] = useState('')
-    const { data, isLoading, execute, status, error } = useFetch(createPost)
+    const { data, isLoading, execute, status, message } = useApi(createPost)
 
     useEffect(() => {
         if (status === 'success') {
             message.success('Successfully posted')
             setContent('')
 
-            //Prepend new posts
-            updatePost(data)
-            setPostIds(ids => [data.id, ...ids])
-        } else if (status === 'error') {
-            message.error('An error occured') 
-            console.log(error)           
+            dispatch('PREPEND_POST', data)
+
         }
     },[status])
 

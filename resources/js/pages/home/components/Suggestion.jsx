@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Avatar, Button, List } from "antd";
+import { List } from "antd";
 import { fetchSuggestions } from '@/js/apis/UserApi';
-import { useFetch } from '@/js/utils';
 import useUsersState from '@/js/states/useUsersState';
 import SuggestionItem from './SuggestionItem'
+import { useApi } from '@/js/hooks';
 
 export default function () {
-    const { updateUsers } = useUsersState()
+    const { dispatch } = useUsersState()
     const [suggestions, setSuggestions] = useState([])
-    const { isLoading, data, status } = useFetch(fetchSuggestions, { executeOnMount: true })
+    const { isLoading, data, status } = useApi(fetchSuggestions, { executeOnMount: true })
 
     useEffect(() => {
         if (status === 'success') {
-            updateUsers(data)
+            dispatch('ADD_OR_UPDATE_USERS', data)
             setSuggestions(data)
         }
     },[status])

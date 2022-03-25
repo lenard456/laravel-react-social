@@ -1,19 +1,24 @@
-import { useAuth } from '@/js/contexts/AuthContext'
 import { Comment, Avatar, Button, Input } from 'antd'
 import { useState, useEffect } from 'react'
 import { comment } from '@/js/apis/PostApi'
-import { useFetch } from '@/js/utils'
 import usePostsCommentsState from '@/js/states/usePostsCommentsState'
+import { useRecoilValue } from 'recoil'
+import { currentUserState } from '@/js/states/useAuthStates'
+import { useApi } from '@/js/hooks'
 
 export default function ({post}) {
-    const { updatePostComments } = usePostsCommentsState()
-    const { isLoading, execute, status, data } = useFetch(comment)
-    const { currentUser } = useAuth()
+    const { dispatch } = usePostsCommentsState()
+    const { isLoading, execute, status, data } = useApi(comment)
+    const currentUser = useRecoilValue(currentUserState)
     const [ content, setContent ] = useState('')
 
+    
     useEffect(() => {
         if (status == 'success') {
-            updatePostComments(post.id, data)
+            dispatch('APPEND_POST_COMMENT', {
+                postId: post.id,
+                comment: data
+            })
         }
     }, [status])
 

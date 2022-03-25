@@ -34,7 +34,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'imageAvatar'
+        'imageAvatar',
+        'email',
+        'email_verified_at',
+        'updated_at'
     ];
 
     /**
@@ -157,7 +160,7 @@ class User extends Authenticatable
         $comment->user()->associate($this);
         $comment->commentable()->associate($commentable);
         $comment->save();
-        return $this;
+        return $comment;
     }
 
     public function hasLiked($likable)

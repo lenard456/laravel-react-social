@@ -25,21 +25,78 @@ const feedPosts = selector({
     }
 })
 
+const feedState = selector({
+    key: 'feed',
+    get: ({get}) => {
+        return {
+            currentPage: get(currentPageState),
+            lastPage: get(lastPageState),
+            postIds: get(postIdsState)
+        }
+    }
+})
+
+const reducer = (feedState, type, payload) => {
+    switch(type) {
+        case 'SET_FEED': {
+            const { currentPage, lastPage, posts } = payload
+            return {
+                currentPage,
+                lastPage,
+                postIds: posts.map(post => post.id)
+            }
+        }
+
+        case 'PREPEND_POST': {
+            const post = payload
+            return {...feedState, postIds: [post.id, ...feedState.postIds]}
+        }
+
+        case 'SET_NEXT_FEED': {
+            const { currentPage, lastPage, posts } = payload
+            return {
+                currentPage,
+                lastPage,
+                postIds: [...feedState.postIds, ...posts.map(post => post.id)]
+            }
+        }
+
+        default:
+            return feedState
+    }
+}
+
 export default function () {
-    const { updatePosts } = usePostsState()
+    const { dispatch:dispatchPostsState } = usePostsState()
+    const feed = useRecoilValue(feedState)
     const [currentPage, setCurrentPage] = useRecoilState(currentPageState)
     const [lastPage, setLastPage] = useRecoilState(lastPageState)
     const [postIds, setPostIds] = useRecoilState(postIdsState)
     const posts = useRecoilValue(feedPosts)
 
-    const updateFeed = ({currentPage, lastPage, posts}) => {
-        setCurrentPage(oldValue => currentPage || oldValue)
-        setLastPage(oldValue => lastPage || oldValue)
-        updatePosts(posts)
-        setPostIds(postIds => {
-            const newPostIds = posts.map(post => post.id)
-            return _.union(postIds, newPostIds)
-        })
+    const extract = (type, payload) => {
+        switch (type) {
+            case 'SET_NEXT_FEED':
+            case 'SET_FEED': {
+                const { posts } = payload
+                dispatchPostsState('SET_POSTS', posts)
+            }
+
+            case 'PREPEND_POST': {
+                dispatchPostsState('SET_POSTS', [payload])
+            }
+
+        }
+
+        return payload //No transformation only side effects
+    }
+
+    const dispatch = (type, payload) => {
+        const extracted = extract(type, payload)
+        const { currentPage, lastPage, postIds } = reducer(feed, type, extracted)
+        setCurrentPage(currentPage)
+        setLastPage(lastPage)
+        setPostIds(postIds)
     }
     
     return {
@@ -47,7 +104,6 @@ export default function () {
         lastPage,
         postIds,
         posts,
-        updateFeed,
-        setPostIds
+        dispatch
     }
 }

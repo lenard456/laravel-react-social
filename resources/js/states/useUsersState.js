@@ -1,43 +1,87 @@
-import { atom, useRecoilState } from 'recoil'
+import { atom, useRecoilState, useRecoilValue } from 'recoil'
 import { deepMerge } from '@utils'
-import useFollowingState from './useFollowingState'
+import useFollowingState, { followingIdsState, useUserFollowingIdState } from './useFollowingState'
 
 export const usersState = atom({
     key: 'users',
     default: {}
 })
 
+const convertToObject = (users) => {
+    return users.reduce((acm, user) => {
+        return {...acm, [user.id]: user}
+    }, {})
+}
+
+const reducer = (users, type, payload) =>{
+    switch (type) {
+        case 'ADD_OR_UPDATE_USERS': 
+            let newUsers = payload
+            return newUsers.reduce((acm, user) => {
+                return {...acm, [user.id] : user}
+            }, users)
+        case 'ADD_OR_UPDATE_USER':
+            let user = payload
+            return reducer(users, 'ADD_OR_UPDATE_USERS', [user])
+        default:
+            return users;
+    }
+}
+
 const useUsersState = function() {
     const [users, setUsers] = useRecoilState(usersState)
-    const { updateFollowingIds } = useFollowingState()
+    const { dispatch:dispatchFollowingState } = useFollowingState()
 
-    const updateUsers = (newUsers) => {
-        let objectNewUsers = newUsers.reduce((acm, {followingIds, ...user}) => {
-            if (followingIds) updateFollowingIds(user.id, followingIds);
-            return {...acm, [user.id]: user}
-        }, {})
-
-        setUsers(users => {
-            return deepMerge(users, objectNewUsers)
-        })
+    //sideEffect
+    const extract = (type, payload) => {
+        switch(type) {
+            case 'ADD_OR_UPDATE_USERS':
+            case 'USERS':
+                const users = payload
+                let extracted = []
+                users.forEach(({followingIds,...user}) => {
+                    if(followingIds) {
+                        dispatchFollowingState('SET_FOLLOWING_IDS', {
+                            userId: user.id, 
+                            followingIds
+                        });
+                    }
+                    extracted.push(user)
+                })
+                return extracted;
+            case 'SET_USER':
+            case 'ADD_OR_UPDATE_USER':
+                const {followingIds, ...user} = payload
+                dispatch('SET_FOLLOWING_IDS', {userId:user.id, followingIds})
+                return user;
+            default:
+                return payload
+        }
     }
 
-    const updateUser = (newUser) => updateUsers([newUser])
+    const dispatch = (type, payload) => {
+        let extracted = extract(type, payload)
+        setUsers((users) => reducer(users, type, extracted))
+    }
+
 
     return {
         users,
-        updateUser, 
-        updateUsers
+        dispatch
     }
 }
 
 export const useUserState = function(userId)
 {
-    const { users } = useUsersState()
+    const users = useRecoilValue(usersState)
+    const useThisUserFollowingIdState = () => useUserFollowingIdState(userId)
+
     const user = users[userId]
 
     return {
-        user
+        id: userId,
+        user,
+        useUserFollowingIdState: useThisUserFollowingIdState
     }
 } 
 

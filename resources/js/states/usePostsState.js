@@ -8,46 +8,67 @@ export const postsState = atom({
     default: {}
 })
 
+const reducer = (posts, type, payload) => {
+    switch(type) {
+        case 'SET_POSTS': {
+            const newPosts = payload
+            return newPosts.reduce((acm, post) => {
+                return {...acm, [post.id]: post}
+            }, posts)
+        }
+        case 'SET_POST': {
+            return reducer(posts, 'SET_POSTS', [payload])
+        }
+        default:
+            return payload
+    }
+}
+
 const usePostsState = function() {
     const [posts, setPosts] = useRecoilState(postsState)
-    const { updatePostComments } = usePostsCommentsState()
-    const { updateUser } = useUsersState()
+    const { dispatch:dispatchPostsCommentState } = usePostsCommentsState()
+    const { dispatch:dispatchUserState } = useUsersState()
 
-    const updatePosts = (newPosts) => {
-        let objectNewPosts = newPosts.reduce((acm, {user, comments, ...post}) => {
-            if (user) updateUser(user);
-            if (comments) updatePostComments(post.id, comments)
-            return {...acm, [post.id]: post}
-        }, {})
-
-        setPosts(posts => {
-            return deepMerge(posts, objectNewPosts)
-        })
+    const extract = (type, payload) => {
+        switch (type) {
+            case 'SET_POSTS': {
+                const posts = payload
+                const extractedPost = []
+                posts.forEach(({user, comments, ...post}) => {
+                    if (user) dispatchUserState('SET_USER', user)
+                    if (comments) dispatchPostsCommentState('SET_POST_COMMENTS', {postId:post.id, comments})
+                    extractedPost.push(post)
+                })
+                return extractedPost
+            }
+            case 'SET_POST': {
+                const { user, comments, ...post } = payload
+                if (user) dispatchUserState('SET_USER', user)
+                if (comments) dispatchPostsCommentState('SET_POST_COMMENTS', {postId:post.id, comments})
+                return post
+            }
+            default:
+                return payload
+        }
     }
 
-    const updatePost = (post) => updatePosts([post])
-
-    const setPost = (post) => {
-        setPosts(posts => {
-            return {...posts, [post.id] : post}
-        })
+    const dispatch = (type, payload) => {
+        const extracted = extract(type, payload)
+        setPosts(posts => reducer(posts, type, extracted))
     }
 
     return {
         posts,
-        updatePost,
-        updatePosts,
-        setPost
+        dispatch
     }
 }
 
 export const usePostState = function(id) {
-    const {  posts, setPost, updatePost } = usePostsState()
+    const {  posts, dispatch } = usePostsState()
     const post = posts[id]
     return {
         post,
-        setPost,
-        updatePost
+        dispatch
     }
 }
 

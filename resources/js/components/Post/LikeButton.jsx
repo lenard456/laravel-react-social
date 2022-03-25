@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
-import { useAuth } from "@/js/contexts/AuthContext"
 import { LikeFilled, LikeOutlined } from "@ant-design/icons"
 import { Spin } from 'antd'
 import { likePost, unLikePost } from "@/js/apis/PostApi"
-import { useFetch } from "@/js/utils"
 import usePostsState from '@/js/states/usePostsState'
 import _ from 'lodash'
+import { useRecoilValue } from 'recoil'
+import { userIdState } from '@/js/states/useAuthStates'
+import { useApi } from '@/js/hooks'
 
 const toggleLike = async(isLiked, postId) => {
     if (isLiked) {
@@ -16,16 +17,16 @@ const toggleLike = async(isLiked, postId) => {
 }
 
 export default function ({ post }) {
-    const { isLoading, status, data:newLikerIds, execute } = useFetch(toggleLike)
+    const { isLoading, status, data:newLikerIds, execute } = useApi(toggleLike)
 
     const { likerIds, id } = post
-    const { setPost } = usePostsState()
-    const { currentUser } = useAuth()
-    const isLiked = likerIds.some(liker_id => liker_id == currentUser.id)
+    const { dispatch } = usePostsState()
+    const currentUserId = useRecoilValue(userIdState);
+    const isLiked = likerIds.some(liker_id => liker_id == currentUserId)
 
     useEffect(() => {
         if (status == 'success') {
-            setPost({
+            dispatch('SET_POST',{
                 ...post,
                 likerIds: newLikerIds
             })

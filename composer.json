@@ -45,6 +45,10 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "install-php8.1": [
+            "sudo add-apt-repository ppa:ondrej/php -y",
+            "sudo install-packages php8.1 php8.1-curl php8.1-dom php8.1-sqlite3"
         ]
     },
     "extra": {

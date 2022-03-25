@@ -24,8 +24,8 @@ class PostController extends Controller
 
     public function comment(Post $post, CommentRequest $request)
     {
-        Auth::user()->comment($post, $request->content);
-        return $post->comments;
+        $comment = Auth::user()->comment($post, $request->content);
+        return $comment;
     }
 
     public function index()

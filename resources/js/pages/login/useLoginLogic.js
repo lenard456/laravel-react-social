@@ -1,37 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { AuthApi } from '@apis'
-import validationRules from './validationRules'
-import { message } from 'antd'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@contexts/AuthContext'
-import { useFetch, mapValidationErrors } from '@/js/utils'
+import { useAuthState } from '@/js/states'
+import { useApi } from '@/js/hooks'
 
 export default function()
 {
-    const navigate = useNavigate()
-    const { setAuth } = useAuth()
-    const { data:user, error, isLoading, execute, status } = useFetch(AuthApi.login)
-    const [validationErrors, setValidationErrors] = useState({})
- 
+    const { execute, isLoading, status, validationErrors, navigate, message } = useApi(AuthApi.login)
+
+    const { dispatch } = useAuthState()
+
     // On Status Changed
     useEffect(() => {
         if (status === 'success') {
-            setAuth(user)
+            dispatch('SET_AUTHENTICATED', true)
             message.success('Login Successfully')
             navigate('/')
-        } else if (status === 'error') {
-            if (error?.response?.status === 422) {
-                const { errors } = error.response.data
-                setValidationErrors(mapValidationErrors(errors))
-            } else {
-                message.error('An unknown error occured');
-            }
         }
     }, [status])
 
     const handleSubmit = (formData) => {
         if (isLoading) return;
-        setValidationErrors({})
         execute(formData)
     }
 

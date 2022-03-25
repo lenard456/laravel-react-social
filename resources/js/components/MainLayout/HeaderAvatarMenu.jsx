@@ -1,13 +1,12 @@
-import { Modal, Avatar, Divider, Menu, message } from 'antd'
+import { Modal, Avatar, Divider, Menu } from 'antd'
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
 import AuthApi from '@apis/AuthApi'
-import { useAuth } from '@contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useApi } from '@/js/hooks'
+import { useAuthState } from '@/js/states'
 
 export default ({ setIsOpen }) => {
-
-    const { invalidateSession } = useAuth()
-    const navigate = useNavigate()
+    const { execute:logout, message, navigate } = useApi(AuthApi.logout) 
+    const { dispatch } = useAuthState()
 
     const menuClicked = ({key}) => {
         if (key === 'logout') {
@@ -15,12 +14,16 @@ export default ({ setIsOpen }) => {
             Modal.confirm({
                 title: 'Confirm logout',
                 content: 'Are you sure to logout?',
-                onOk() {
-                    return AuthApi.logout().then(()=>{
-                        message.success('Logout successfully')
-                        invalidateSession()
-                        navigate('/login')
-                    }).catch(console.log)
+                async onOk() {
+                    await logout()
+                    message.success('Logout successully')
+                    dispatch('LOGOUT')
+                    navigate('/login')
+                    // return AuthApi.logout().then(()=>{
+                    //     message.success('Logout successfully')
+                    //     invalidateSession()
+                    //     navigate('/login')
+                    // }).catch(console.log)
                 }
             })
         }
