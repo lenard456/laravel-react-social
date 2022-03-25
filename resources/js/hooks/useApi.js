@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useAuthState } from '../states'
+import useAuthActions, { REMOVE_CURRENT_USER } from '../recoil/actions/useAuthActions'
 
 const STATUS_IDLE = 'idle'
 const STATUS_LOADING = 'loading'
@@ -24,7 +25,7 @@ const mapValidationErrors = (validationErrors) => {
 
 const useApi = function(promise, config) {
     const navigate = useNavigate()
-    const { dispatch } = useAuthState()
+    const authDispatcher = useAuthActions()
     const { params, executeOnMount } = {...defaultConfig, ...config}
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)   
@@ -52,7 +53,7 @@ const useApi = function(promise, config) {
                 message.error('Something wrong happened in our server. Please coordinate with an admin');
             } else if (error?.response?.status === 401) {
                 message.error('Session expired: You need to login again')
-                dispatch('LOGOUT')
+                authDispatcher(REMOVE_CURRENT_USER)
                 navigate('/login')
             } else if (error?.response?.status === 422) {
                 setValidationErrors(mapValidationErrors(error.response.data.errors))

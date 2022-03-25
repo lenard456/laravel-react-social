@@ -9,17 +9,22 @@ import WriteComment from './components/WriteComment';
 import { usePostCommentsState } from '@/js/states/usePostsCommentsState';
 import CommentList from './components/CommentList';
 import { useApi } from '@/js/hooks';
+import usePost from '@/js/recoil/selectors/usePost';
+import usePostsAction, { SET_POST } from '@/js/recoil/actions/usePostsAction';
+import usePostComments from '@/js/recoil/selectors/usePostComments';
 
 export default function () {
     const [isPageNotFound, setIsPageNotFound] = useState(false)
     const { execute, data, status, isLoading, error, isError } = useApi(fetchPost);
-    const { id:postId } = useParams()
-    const { post, dispatch } = usePostState(postId)
-    const { postComments:comments } = usePostCommentsState(postId)
+    const { id } = useParams()
+    const postsDispatcher = usePostsAction()
+    const post = usePost(id)
+
+    const comments = usePostComments(id)
 
     useEffect(() => {
         if (status == 'success') {
-            dispatch('SET_POST', data)
+            postsDispatcher(SET_POST, {post:data})
         } else if (isError) {
             if (error?.response?.status === 404) {
                 setIsPageNotFound(true)
@@ -28,8 +33,8 @@ export default function () {
     }, [status])
 
     useEffect(() => {
-        execute(postId)
-    }, [postId])
+        execute(id)
+    }, [id])
 
     
     if (isPageNotFound) {

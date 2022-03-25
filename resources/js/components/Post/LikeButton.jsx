@@ -1,12 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { LikeFilled, LikeOutlined } from "@ant-design/icons"
 import { Spin } from 'antd'
 import { likePost, unLikePost } from "@/js/apis/PostApi"
-import usePostsState from '@/js/states/usePostsState'
 import _ from 'lodash'
 import { useRecoilValue } from 'recoil'
-import { userIdState } from '@/js/states/useAuthStates'
 import { useApi } from '@/js/hooks'
+import authState from '@/js/recoil/states/authState'
+import usePostsAction, { SET_POST_LIKER_IDS } from '@/js/recoil/actions/usePostsAction'
 
 const toggleLike = async(isLiked, postId) => {
     if (isLiked) {
@@ -20,14 +20,14 @@ export default function ({ post }) {
     const { isLoading, status, data:newLikerIds, execute } = useApi(toggleLike)
 
     const { likerIds, id } = post
-    const { dispatch } = usePostsState()
-    const currentUserId = useRecoilValue(userIdState);
-    const isLiked = likerIds.some(liker_id => liker_id == currentUserId)
+    const postsDispatcher = usePostsAction()
+    const { currentUserId } = useRecoilValue(authState);
+    const isLiked = useMemo(() => likerIds.some(liker_id => liker_id == currentUserId), [likerIds])
 
     useEffect(() => {
         if (status == 'success') {
-            dispatch('SET_POST',{
-                ...post,
+            postsDispatcher(SET_POST_LIKER_IDS, {
+                postId: id,
                 likerIds: newLikerIds
             })
         }
