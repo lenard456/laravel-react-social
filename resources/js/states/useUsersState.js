@@ -52,7 +52,7 @@ const useUsersState = function() {
             case 'SET_USER':
             case 'ADD_OR_UPDATE_USER':
                 const {followingIds, ...user} = payload
-                dispatch('SET_FOLLOWING_IDS', {userId:user.id, followingIds})
+                if (followingIds) dispatchFollowingState('SET_FOLLOWING_IDS', {userId:user.id, followingIds})
                 return user;
             default:
                 return payload
