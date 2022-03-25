@@ -1,8 +1,9 @@
-import { useAuth } from "@contexts/AuthContext"
-import { Navigate, Outlet, useNavigate } from "react-router-dom"
+import { isAuthenticatedState } from "@/js/states/useAuthStates"
+import { useRecoilValue } from "recoil"
+import { Navigate, Outlet } from 'react-router-dom'
 
-export default () => {
-    const { isAuthenticated } = useAuth()
+const GuestOnly = () => {
+    const isAuthenticated = useRecoilValue(isAuthenticatedState)
 
     if (isAuthenticated) {
         return <Navigate to='/' />
@@ -10,3 +11,5 @@ export default () => {
     
     return <Outlet />
 }
+
+export default GuestOnly

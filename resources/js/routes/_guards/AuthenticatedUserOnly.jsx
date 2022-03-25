@@ -1,10 +1,10 @@
-import { useAuth } from '@contexts/AuthContext'
 import { useEffect } from 'react'
-import { Outlet, Navigate, useNavigate } from 'react-router-dom'
-import AuthApi from '@apis/AuthApi'
-import { Spin, message } from 'antd'
+import { Spin } from 'antd'
 import { Logo } from '@components'
-import { useFetch } from '@utils'
+import { useAuthState } from '@/js/states'
+import { useApi } from '@/js/hooks'
+import { AuthApi } from '@/js/apis'
+import { Navigate, Outlet } from 'react-router-dom'
 
 const Validating = () => {
     return (
@@ -15,44 +15,35 @@ const Validating = () => {
     )
 }
 
-export default function () {
-    const navigate = useNavigate()
-    const { isAuthenticated, isValidated, invalidateSession, setAuth } = useAuth()
-    const { isLoading, error, data:user, execute, status } = useFetch(AuthApi.fetchCurrentUser)
+const AuthenticatedUserOnly = () => {
+    const { isLoading, execute, status, data:user } = useApi(AuthApi.fetchCurrentUser)
+    const { isAuthenticated, isValidated, dispatch } = useAuthState()
 
-    //OnMounted
+    useEffect(() => {
+        if (status == 'success') {
+            dispatch('SET_USER', user)
+        }
+    }, [status])
+
     useEffect(() => {
         if (isAuthenticated && !isValidated) {
-            execute() //This validate if the user is actually log in
-        } 
-    }, [])
-
-    //Status Changed
-    useEffect(() => {
-        if (status === 'success') {
-            setAuth(user)
-        } else if (status === 'error') {
-            if (error?.response?.status === 401) {
-                message.error('Session expired: you need to login again.')
-                invalidateSession()
-                navigate('/login')
-            } else {
-                message.error('An unknown error occured');
-            }
+            execute()
         }
-    }, [status])    
-
-    if (!isAuthenticated) {
-        return <Navigate to='/login' />
-    }
+    }, [])
 
     if (isLoading) {
         return <Validating />
     }
+    
+    if (!isAuthenticated) {
+        return <Navigate to="/login" />
+    }
 
-    if (isAuthenticated && isValidated) {
+    if (isValidated) {
         return <Outlet />
     }
 
     return null
 }
+
+export default AuthenticatedUserOnly

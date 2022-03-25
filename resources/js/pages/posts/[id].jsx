@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useParams } from "react-router-dom"
-import { useFetch } from "@/js/utils"
 import { usePostState } from "@/js/states/usePostsState"
 import { fetchPost } from "@/js/apis/PostApi";
 import { Post } from '@/js/components';
@@ -9,17 +8,18 @@ import { Skeleton } from 'antd'
 import WriteComment from './components/WriteComment';
 import { usePostCommentsState } from '@/js/states/usePostsCommentsState';
 import CommentList from './components/CommentList';
+import { useApi } from '@/js/hooks';
 
 export default function () {
     const [isPageNotFound, setIsPageNotFound] = useState(false)
-    const { execute, data, status, isLoading, error, isError } = useFetch(fetchPost);
+    const { execute, data, status, isLoading, error, isError } = useApi(fetchPost);
     const { id:postId } = useParams()
-    const { post, updatePost } = usePostState(postId)
+    const { post, dispatch } = usePostState(postId)
     const { postComments:comments } = usePostCommentsState(postId)
 
     useEffect(() => {
         if (status == 'success') {
-            updatePost(data)
+            dispatch('SET_POST', data)
         } else if (isError) {
             if (error?.response?.status === 404) {
                 setIsPageNotFound(true)

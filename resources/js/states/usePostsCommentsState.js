@@ -6,20 +6,50 @@ const postsCommentsState = atom({
     default: {}
 })
 
+const reducer = (postsComments, type, payload) => {
+    switch (type) {
+        case 'SET_POST_COMMENTS': {
+            const { postId, commentIds } = payload
+            return {...postsComments, [postId]:commentIds}
+        }
+        case 'APPEND_POST_COMMENT':{
+            const {postId, commentId} = payload
+            let postComments = postsComments[postId] || []
+            return {...postsComments, [postId]: [...postComments, commentId]}
+        }
+    }
+    return postsComments
+}
+
 const usePostsCommentsState = function() {
-    const { updateComments } = useCommentsState()
+    const { dispatch:dispatchCommentState } = useCommentsState()
     const [postsComments, setPostsComments] = useRecoilState(postsCommentsState)
 
-    const updatePostComments = (id, comments) => {
-        updateComments(comments)
-        setPostsComments(oldPostComments => {
-            const commentIds = comments.map(comment => comment.id)
-            return {...oldPostComments, [id]:commentIds}
-        })
+    const extract = (type, payload) => {
+        switch (type) {
+            case 'SET_POST_COMMENTS': {
+                const {postId, comments} = payload
+                dispatchCommentState('SET_COMMENTS', comments)
+                const commentIds = comments.map(comment => comment.id)
+                return {postId, commentIds}
+            }
+            case 'APPEND_POST_COMMENT': {
+                const {postId, comment} = payload
+                dispatchCommentState('SET_COMMENT', comment)
+                return {postId, commentId: comment.id}
+            }
+            default:
+                return payload
+        }
+    }
+
+    const dispatch = (type, payload) => {
+        const extracted = extract(type, payload)
+        setPostsComments(postsComments => reducer(postsComments, type, extracted))
     }
 
     return {
-        updatePostComments,
+        dispatch,
         postsComments
     }
 }

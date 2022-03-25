@@ -1,26 +1,23 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { followUser } from '@/js/apis/UserApi'
-import { useAuth } from '@/js/contexts/AuthContext'
-import useFollowingState from '@/js/states/useFollowingState'
-import { useFetch } from '@/js/utils'
 import { Avatar, Button } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
 import _ from 'lodash'
+import { useCurrentUserState } from '@/js/states/useAuthStates'
+import { useApi } from '@/js/hooks'
 
 export default function ({ user }) {
-    const { execute, isLoading, status, error } = useFetch(followUser)
-    const { setFollowingIds } = useFollowingState()
-    const { isFollowing: checkIfFollowing, currentUser } = useAuth()
-    const isFollowing = checkIfFollowing(user.id)
+    const { id:currentUserId, useUserFollowingIdState } = useCurrentUserState()
+    const { isFollowing, followingIds, dispatch } = useUserFollowingIdState()
+
+    const { execute, isLoading, status, error } = useApi(followUser)
+    const isFollowedByCurrentUser = useMemo(() => isFollowing(user.id), [followingIds])
 
     useEffect(() => {
         if (status == 'success') {
-            setFollowingIds((followingIds) => {
-                const currentUserFollowingIds = followingIds[currentUser.id]
-                return {
-                    ...followingIds,
-                    [currentUser.id]: [...currentUserFollowingIds, user.id]
-                }
+            dispatch('ADD_FOLLOWING_ID', {
+                userId: currentUserId,
+                followingId: user.id
             })
         } else if (status == 'error') {
             console.log(error)
@@ -28,7 +25,7 @@ export default function ({ user }) {
     }, [status])
 
     const handleClick = () => {
-        if (isLoading || isFollowing) return;
+        if (isLoading || isFollowedByCurrentUser) return;
         execute(user.id)
     }
 
@@ -39,11 +36,11 @@ export default function ({ user }) {
                 <span>{user.name}</span>
             </div>
             <Button 
-                className={isFollowing && `border-blue-400 text-blue-400`}
+                className={isFollowedByCurrentUser && `border-blue-400 text-blue-400`}
                 loading={isLoading} 
-                icon={ isFollowing && <CheckOutlined />}
+                icon={ isFollowedByCurrentUser && <CheckOutlined />}
                 onClick={handleClick}
-            >{ isFollowing ? 'Following' : 'Follow' }</Button>
+            >{ isFollowedByCurrentUser ? 'Following' : 'Follow' }</Button>
         </div>
     )
 }

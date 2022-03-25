@@ -1,25 +1,54 @@
+import { useMemo } from 'react'
 import { atom, useRecoilState, useSetRecoilState } from "recoil";
 
-const followingIdsState = atom({
+export const followingIdsState = atom({
     key: 'followingIds',
     default: {}
 })
 
-export default function() {
+const reducer = (allFollowingIds, type, payload) => {
+    switch(type) {
+        case 'SET_FOLLOWING_IDS': {
+            const { userId, followingIds } = payload
+            return {...allFollowingIds, [userId]: followingIds}
+        }
+        case 'ADD_FOLLOWING_ID': {
+            const { userId, followingId } = payload
+            return {...allFollowingIds, [userId]: [...allFollowingIds[userId], followingId]}
+        }
+        default:
+            return allFollowingIds
+    }
+}
+
+const useFollowingState = function() {
     const [followingIds, setFollowingIds] = useRecoilState(followingIdsState)
 
-    const updateFollowingIds = (user_id, followingIds) => {
-        setFollowingIds(oldState => {
-            return {
-                ...oldState,
-                [user_id] : followingIds
-            }
-        })
+    const dispatch = (type, payload) => {
+        setFollowingIds((allFollowingIds) => reducer(allFollowingIds, type, payload))
     }
 
     return {
-        setFollowingIds,
-        updateFollowingIds,
-        followingIds
+        followingIds,
+        dispatch
     }
 }
+
+export const useUserFollowingIdState = (userId) => {
+    const {followingIds:allFollowingIds, dispatch} = useFollowingState()
+    //const [allFollowingIds, setAllFollowingIds] = useRecoilState(followingIdsState)
+    const followingIds = allFollowingIds[userId] || []
+
+
+    const isFollowing = (otherUserId) => {
+        return followingIds.some(id => id == otherUserId)
+    }
+
+    return {
+        followingIds,
+        isFollowing,
+        dispatch
+    }
+}
+
+export default useFollowingState

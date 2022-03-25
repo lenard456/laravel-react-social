@@ -39,7 +39,8 @@
                 "resources/js/utils/*"
             ]
         },
-        "allowJs": true
+        "allowJs": true,
+        "noEmit": true
     },
     "include": [
         "resources/**/*"
