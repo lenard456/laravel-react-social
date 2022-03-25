@@ -3,25 +3,28 @@ import { followUser } from '@/js/apis/UserApi'
 import { Avatar, Button } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
 import _ from 'lodash'
-import { useCurrentUserState } from '@/js/states/useAuthStates'
 import { useApi } from '@/js/hooks'
+import { useCurrentUserFollowingIds } from '@/js/recoil/selectors/currentUserSelector'
+import useFollowingIdsAction, { APPEND_FOLLOWING_IDS } from '@/js/recoil/actions/useFollowingIdsAction'
+import { useRecoilValue } from 'recoil'
+import authState from '@/js/recoil/states/authState'
+
 
 export default function ({ user }) {
-    const { id:currentUserId, useUserFollowingIdState } = useCurrentUserState()
-    const { isFollowing, followingIds, dispatch } = useUserFollowingIdState()
+    const { currentUserId } = useRecoilValue(authState)
+    const { isCurrentUserFollowing, currentUserFollowingIds } = useCurrentUserFollowingIds()
+    const isFollowedByCurrentUser = useMemo(() => isCurrentUserFollowing(user.id), [currentUserFollowingIds])
 
-    const { execute, isLoading, status, error } = useApi(followUser)
-    const isFollowedByCurrentUser = useMemo(() => isFollowing(user.id), [followingIds])
+    const { execute, isLoading, status } = useApi(followUser)
+    const followingIdsDispatcher = useFollowingIdsAction()
 
     useEffect(() => {
         if (status == 'success') {
-            dispatch('ADD_FOLLOWING_ID', {
+            followingIdsDispatcher(APPEND_FOLLOWING_IDS, {
                 userId: currentUserId,
                 followingId: user.id
             })
-        } else if (status == 'error') {
-            console.log(error)
-        }
+        } 
     }, [status])
 
     const handleClick = () => {

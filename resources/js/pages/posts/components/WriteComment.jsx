@@ -1,21 +1,21 @@
 import { Comment, Avatar, Button, Input } from 'antd'
 import { useState, useEffect } from 'react'
 import { comment } from '@/js/apis/PostApi'
-import usePostsCommentsState from '@/js/states/usePostsCommentsState'
 import { useRecoilValue } from 'recoil'
-import { currentUserState } from '@/js/states/useAuthStates'
 import { useApi } from '@/js/hooks'
+import currentUserSelector from '@/js/recoil/selectors/currentUserSelector'
+import usePostsCommentIdsAction, { APPEND_POST_COMMENT_IDS } from '@/js/recoil/actions/usePostsCommentIdsAction'
 
 export default function ({post}) {
-    const { dispatch } = usePostsCommentsState()
+    const postsCommentIdsDispatcher = usePostsCommentIdsAction()
     const { isLoading, execute, status, data } = useApi(comment)
-    const currentUser = useRecoilValue(currentUserState)
+    const currentUser = useRecoilValue(currentUserSelector)
     const [ content, setContent ] = useState('')
 
     
     useEffect(() => {
         if (status == 'success') {
-            dispatch('APPEND_POST_COMMENT', {
+            postsCommentIdsDispatcher(APPEND_POST_COMMENT_IDS, {
                 postId: post.id,
                 comment: data
             })

@@ -2,11 +2,11 @@ import moment from 'moment'
 import { Avatar,  Comment, Tooltip} from 'antd'
 import { LikeOutlined } from '@ant-design/icons'
 import { useUserState } from '@/js/states/useUsersState'
+import useUser from '@/js/recoil/selectors/useUser'
 
 export default function({comment})
 {
-
-    const {user} = useUserState(comment.user_id)
+    const user = useUser(comment.user_id)
 
     return (
         <Comment 

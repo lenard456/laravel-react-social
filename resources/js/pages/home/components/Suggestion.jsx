@@ -4,15 +4,16 @@ import { fetchSuggestions } from '@/js/apis/UserApi';
 import useUsersState from '@/js/states/useUsersState';
 import SuggestionItem from './SuggestionItem'
 import { useApi } from '@/js/hooks';
+import useUsersAction, { SET_USERS } from '@/js/recoil/actions/useUsersAction';
 
 export default function () {
-    const { dispatch } = useUsersState()
+    const usersDispatcher = useUsersAction()
     const [suggestions, setSuggestions] = useState([])
     const { isLoading, data, status } = useApi(fetchSuggestions, { executeOnMount: true })
 
     useEffect(() => {
         if (status === 'success') {
-            dispatch('ADD_OR_UPDATE_USERS', data)
+            usersDispatcher(SET_USERS, {users:data})
             setSuggestions(data)
         }
     },[status])

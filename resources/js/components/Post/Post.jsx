@@ -1,15 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Avatar } from 'antd'
 import { CommentOutlined } from '@ant-design/icons'
-import usePostsState from '@/js/states/usePostsState'
-import useUsersState from '@/js/states/useUsersState'
 import moment from 'moment'
 import LikeButton from './LikeButton'
+import useUser from '@/js/recoil/selectors/useUser'
 
 export default function({ children, post }) {
-    const { users } = useUsersState()
     const { id, content, user_id, created_at, likerIds} = post
-    const user = users[user_id]
+    const user = useUser(user_id)
     const likeCount = likerIds.length
 
     return (
