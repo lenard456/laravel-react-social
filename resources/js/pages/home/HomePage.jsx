@@ -2,24 +2,12 @@ import CreatePost from './components/CreatePost'
 import { Post } from '@/js/components'
 import Suggestion from './components/Suggestion'
 import useHomePageLogic from './useHomePageLogic'
-import { List, Button, Skeleton } from 'antd'
+import { List, Skeleton } from 'antd'
+import LoadMore from './components/LoadMore'
 
 export default function () {
 
     const { posts, hasNext, seeMore, isLoading, initLoading } = useHomePageLogic()
-
-    const loadMore = !isLoading && hasNext && (
-        <div
-            style={{
-                textAlign: 'center',
-                marginTop: 12,
-                height: 32,
-                lineHeight: '32px',
-            }}
-        >
-            <Button onClick={seeMore}>loading more</Button>
-        </div>
-    )
 
     return (
         <div className='max-w-4xl mx-auto my-8 grid grid-cols-5 gap-8'>
@@ -38,9 +26,9 @@ export default function () {
                                 <Post post={post} />
                             </List.Item>
                         )}
-                        loadMore={loadMore}
+                        loadMore={<LoadMore hasNext={hasNext} seeMore={seeMore} isLoading={isLoading} />}
                     />
-                    <Skeleton loading={!initLoading && isLoading} active/>
+                    <Skeleton loading={!initLoading && isLoading} active />
                 </div>
 
             </div>

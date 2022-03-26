@@ -4,8 +4,9 @@
 
 tasks:
   - init: sudo add-apt-repository ppa:ondrej/php && \
-          sudo install-packages php8.1 php8.1-dom php8.1-sqlite3 php8.1-curl\
+          sudo install-packages php8.1 php8.1-dom php8.1-sqlite3 php8.1-curl &&\
           npm install
-    command: npm run dev
+    command: composer install-php8.1 &&\
+             npm run dev
 
 

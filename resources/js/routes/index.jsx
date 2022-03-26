@@ -5,9 +5,10 @@ import {
     LoginPage,
     RegisterPage,
     HomePage,
-    PostPage
+    PostPage,
+    ProfileIndexPage
 } from '@pages/'
-import { MainLayout } from '@components'
+import { MainLayout, ProfileLayout } from '@components'
 
 export default () => (
     <BrowserRouter>
@@ -15,8 +16,14 @@ export default () => (
             <Route path='/' element={<AuthenticatedUserOnly />}>
                 <Route path='' element={<MainLayout />}>
                     <Route index element={<HomePage />} />
-                    <Route path='/users/:id' element={<div>UserProfile</div>} />
                     <Route path='posts/:id' element={<PostPage />} />
+                    <Route path='profile/:id' element={<ProfileLayout />} >
+                        <Route index element={<ProfileIndexPage />} />
+                        <Route path='about' element={<div>About</div>}/>
+                        <Route path='following' element={<div>Following</div>}/>
+                        <Route path='follower' element={<div>Follower</div>}/>
+                        <Route path='saved' element={<div>Saved</div>}/>
+                    </Route>
                 </Route>
             </Route>
 

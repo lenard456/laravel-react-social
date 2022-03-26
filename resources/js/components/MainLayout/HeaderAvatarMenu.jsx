@@ -5,6 +5,7 @@ import { useApi } from '@/js/hooks'
 import { useRecoilValue } from 'recoil'
 import currentUserSelector from '@/js/recoil/selectors/currentUserSelector'
 import useAuthActions, { REMOVE_CURRENT_USER } from '@/js/recoil/actions/useAuthActions'
+import { Link } from 'react-router-dom'
 
 export default ({ setIsOpen }) => {
     const { execute:logout, message, navigate } = useApi(AuthApi.logout) 
@@ -33,7 +34,7 @@ export default ({ setIsOpen }) => {
                 <Avatar src={currentUser.avatar} size={60}/>
                 <div className='flex flex-col leading-3 text-gray-700'>
                     <span className='text-lg font-bold'>{currentUser.name}</span>
-                    <span>See your profile</span>
+                    <Link onClick={() => setIsOpen(false)} to={`/profile/${currentUser.id}`}>See your profile</Link>
                 </div>
             </div>
 
