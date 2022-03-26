@@ -1,8 +1,10 @@
 import { Input, Button } from 'antd'
 import { SearchOutlined, MessageOutlined, BellOutlined } from '@ant-design/icons'
 import HeaderAvatar from './HeaderAvatar'
+import Logo from '../Logo'
+import { Link } from 'react-router-dom'
 
-export default function() {
+export default function () {
 
     return (
         <header className='bg-white shadow h-16 sticky top-0 w-full z-[1]'>
@@ -12,18 +14,16 @@ export default function() {
 
                 <div className='flex'>
                     {/* Logo */}
-                    <span className='font-bold block text-2xl text-center'>
-                        <span className='text-red-400'>Laravel</span>
-                        <span> + </span> 
-                        <span className='text-blue-400'>React</span>
-                    </span>
+                    <Link to='/'>
+                        <Logo />
+                    </Link>
 
                     {/* Searchbox */}
                     <div className='ml-8'>
-                        <Input 
-                            prefix={<SearchOutlined className='text-gray-400'/>}
-                            className='rounded-lg' 
-                            size='large' 
+                        <Input
+                            prefix={<SearchOutlined className='text-gray-400' />}
+                            className='rounded-lg'
+                            size='large'
                             placeholder='Search for users or post'
                         />
                     </div>
@@ -33,8 +33,8 @@ export default function() {
 
                 {/* Right Menu */}
                 <div>
-                    <Button className='rounded-lg text-gray-400' icon={<BellOutlined />}/>
-                    <Button className='ml-2 rounded-lg text-gray-400' icon={<MessageOutlined />}/>
+                    <Button className='rounded-lg text-gray-400' icon={<BellOutlined />} />
+                    <Button className='ml-2 rounded-lg text-gray-400' icon={<MessageOutlined />} />
 
                     <HeaderAvatar />
                 </div>
