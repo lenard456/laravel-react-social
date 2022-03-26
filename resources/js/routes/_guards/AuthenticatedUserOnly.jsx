@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Spin } from 'antd'
 import { Logo } from '@components'
-import { useAuthState } from '@/js/states'
 import { useApi } from '@/js/hooks'
 import { AuthApi } from '@/js/apis'
 import { Navigate, Outlet } from 'react-router-dom'

@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { AuthApi } from '@apis'
-import { useAuthState } from '@/js/states'
 import { useApi } from '@/js/hooks'
 import useAuthActions, { SET_AUTHENTICATED } from '@/js/recoil/actions/useAuthActions'
 

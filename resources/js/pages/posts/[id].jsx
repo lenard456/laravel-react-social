@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useParams } from "react-router-dom"
-import { usePostState } from "@/js/states/usePostsState"
 import { fetchPost } from "@/js/apis/PostApi";
 import { Post } from '@/js/components';
 import Page404 from '@/js/components/Page404';
 import { Skeleton } from 'antd'
 import WriteComment from './components/WriteComment';
-import { usePostCommentsState } from '@/js/states/usePostsCommentsState';
 import CommentList from './components/CommentList';
 import { useApi } from '@/js/hooks';
 import usePost from '@/js/recoil/selectors/usePost';
@@ -54,13 +52,14 @@ export default function () {
                 {
                     post && (
                         <Post post={post}>
+
+                            <CommentList comments={comments}/>
+
                             <Skeleton 
                                 avatar
                                 active
                                 loading={isLoading}
                             />
-
-                            <CommentList comments={comments}/>
 
                             <WriteComment post={post}/>
 

@@ -15,7 +15,7 @@ const useCommentsAction = () => {
         switch(type){
             case SET_COMMENTS: {
                 const { comments } = payload
-                const users = _.compact(_.keyBy(comments, 'user'))
+                const users = _.compact(_.map(comments, 'user'))
                 usersDispatcher(SET_USERS, {users})
                 const commentsObject = _.keyBy(comments.map(({user, ...comment}) => comment), 'id')
                 setComments(comments => ({...comments, ...commentsObject}))
