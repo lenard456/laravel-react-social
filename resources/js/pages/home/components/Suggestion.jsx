@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { List } from "antd";
 import { fetchSuggestions } from '@/js/apis/UserApi';
-import useUsersState from '@/js/states/useUsersState';
 import SuggestionItem from './SuggestionItem'
 import { useApi } from '@/js/hooks';
 import useUsersAction, { SET_USERS } from '@/js/recoil/actions/useUsersAction';
