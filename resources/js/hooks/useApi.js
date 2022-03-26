@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { message } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { useAuthState } from '../states'
 import useAuthActions, { REMOVE_CURRENT_USER } from '../recoil/actions/useAuthActions'
 
 const STATUS_IDLE = 'idle'
