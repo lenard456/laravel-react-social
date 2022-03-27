@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { List } from "antd";
 import { fetchSuggestions } from '@/js/apis/UserApi';
-import SuggestionItem from './SuggestionItem'
+import UserItem from '@/js/components/UserItem';
 import { useApi } from '@/js/hooks';
 import useUsersAction, { SET_USERS } from '@/js/recoil/actions/useUsersAction';
 
@@ -31,7 +31,7 @@ export default function () {
                     </div>
                 }
                 renderItem={ item => (
-                    <List.Item><SuggestionItem user={item} /></List.Item>
+                    <List.Item><UserItem user={item} /></List.Item>
                 )}
             />
         </div>

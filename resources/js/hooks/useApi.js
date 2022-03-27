@@ -69,7 +69,7 @@ const useApi = function(promise, config) {
     }, [])
 
     return {
-        validationErrors, execute, data, error, isLoading, isError, isSuccess, status, message, navigate
+        validationErrors, execute, data, error, isLoading, isError, isSuccess, status, message, navigate, setStatus
     }
 
 }

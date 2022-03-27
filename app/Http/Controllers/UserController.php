@@ -26,6 +26,12 @@ class UserController extends Controller
         return 'Successfully followed';
     }
 
+    public function unFollow(User $user)
+    {
+        $user->followers()->detach(Auth::id());
+        return 'Successfully unfollowed';
+    }
+
     public function currentUser()
     {
         $user = Auth::user()->append('followingIds', 'followerIds');
@@ -36,5 +42,10 @@ class UserController extends Controller
     {
         $posts = $user->posts()->latest()->paginate(10);
         return $posts;
+    }
+
+    public function following(User $user)
+    {
+        return $user->following()->paginate(2);
     }
 }

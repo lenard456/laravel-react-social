@@ -17,6 +17,8 @@ class Post extends Model
 
     protected $with = ['user'];
 
+    protected $withCount = ['comments'];
+
     public function user()
     {
         return $this->belongsTo(User::class);

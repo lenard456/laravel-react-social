@@ -6,7 +6,8 @@ import {
     RegisterPage,
     HomePage,
     PostPage,
-    ProfileIndexPage
+    ProfileIndexPage,
+    ProfileFollowingPage
 } from '@pages/'
 import { MainLayout, ProfileLayout } from '@components'
 
@@ -20,7 +21,7 @@ export default () => (
                     <Route path='profile/:id' element={<ProfileLayout />} >
                         <Route index element={<ProfileIndexPage />} />
                         <Route path='about' element={<div>About</div>}/>
-                        <Route path='following' element={<div>Following</div>}/>
+                        <Route path='following' element={<ProfileFollowingPage />}/>
                         <Route path='follower' element={<div>Follower</div>}/>
                         <Route path='saved' element={<div>Saved</div>}/>
                     </Route>

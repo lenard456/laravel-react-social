@@ -16,10 +16,6 @@ export default function () {
     const { setUserPostIds } = useUsersPostIdsAction()
 
     useEffect(() => {
-        console.log(posts)
-    }, [posts])
-
-    useEffect(() => {
         if (status != 'success') return;
         setUserPostIds(id, {
             currentPage: data.current_page,
@@ -39,23 +35,21 @@ export default function () {
     }, [id])
 
     const seeMore = () => {
-        execute(currentPage + 1)
+        execute(id, currentPage + 1)
     }
 
     return (
-        <>
-            <PostsList
-                posts={posts}
-                initLoading={initLoading}
-                isLoading={isLoading}
-                loadMore={(
-                    <LoadMore 
-                        hasNext={lastPage && currentPage < lastPage} 
-                        seeMore={seeMore}
-                        isLoading={isLoading}
-                    />
-                )}
-            />
-        </>
+        <PostsList
+            posts={posts}
+            initLoading={initLoading}
+            isLoading={isLoading}
+            loadMore={(
+                <LoadMore 
+                    hasNext={lastPage && currentPage < lastPage} 
+                    seeMore={seeMore}
+                    isLoading={isLoading}
+                />
+            )}
+        />
     )
 }

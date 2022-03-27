@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { selector, useRecoilValue } from "recoil";
 import authState from "../states/authState";
 import usersState from "../states/usersState";
@@ -24,6 +25,12 @@ export const useCurrentUserFollowingIds = () => {
         currentUserFollowingIds,
         isCurrentUserFollowing
     }
+}
+
+export const useIsFollowedByCurrentUser = (userId) => {
+    const { isCurrentUserFollowing, currentUserFollowingIds } = useCurrentUserFollowingIds()
+    const isFollowedByCurrentUser = useMemo(() => isCurrentUserFollowing(userId), [currentUserFollowingIds])
+    return isFollowedByCurrentUser
 }
 
 export default currentUserSelector

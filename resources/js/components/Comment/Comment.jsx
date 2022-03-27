@@ -2,6 +2,7 @@ import moment from 'moment'
 import { Avatar,  Comment, Tooltip} from 'antd'
 import { LikeOutlined } from '@ant-design/icons'
 import useUser from '@/js/recoil/selectors/useUser'
+import { Link } from 'react-router-dom'
 
 export default function({comment})
 {
@@ -16,7 +17,7 @@ export default function({comment})
                 </span>,
                 <span key='comment-reply'>View Replies</span>
             ]}
-            author={user.name}
+            author={<Link to={`/profile/${comment.user_id}`}>{user.name}</Link>}
             avatar={<Avatar src={user.avatar} alt="Han Solo" />}
             content={
                 <p>{comment.content}</p>
