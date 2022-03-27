@@ -1,6 +1,6 @@
 import { useSetRecoilState } from "recoil"
 import postsCommentIdsState from "../states/postsCommentIdsState"
-import useCommentsAction, { SET_COMMENT, SET_COMMENTS } from "./useCommentsAction"
+import useCommentsAction from "./useCommentsAction"
 
 export const SET_POST_COMMENT_IDS = 'SET_POST_COMMENT_IDS'
 export const APPEND_POST_COMMENT_IDS = 'APPEND_POST_COMMENT_IDS'
@@ -8,13 +8,13 @@ export const APPEND_POST_COMMENT_IDS = 'APPEND_POST_COMMENT_IDS'
 const usePostsCommentIdsAction = () => {
 
     const setPostsCommentIds = useSetRecoilState(postsCommentIdsState)
-    const commentsDispatcher = useCommentsAction()
+    const { setComments, setComment } = useCommentsAction()
 
     const dispatch = (type, payload) => {
         switch(type) {
             case SET_POST_COMMENT_IDS: {
                 const { comments, postId } = payload
-                commentsDispatcher(SET_COMMENTS,{comments})
+                setComments(comments)
                 setPostsCommentIds(postsCommentIds => {
                     return {
                         ...postsCommentIds,
@@ -26,7 +26,7 @@ const usePostsCommentIdsAction = () => {
 
             case APPEND_POST_COMMENT_IDS: {
                 const { postId, comment } = payload
-                commentsDispatcher(SET_COMMENT, {comment})
+                setComment(comment)
                 setPostsCommentIds(postsCommentIds => {
                     const commentIds = postsCommentIds[postId]
                     return {
