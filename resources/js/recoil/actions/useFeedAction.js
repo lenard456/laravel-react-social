@@ -1,12 +1,12 @@
 import { useSetRecoilState } from "recoil"
 import feedState from "../states/feedState"
 import { union, map } from 'lodash'
-import usePostsAction, { SET_POST, SET_POSTS } from "./usePostsAction"
+import usePostsAction from "./usePostsAction"
 
 const useFeedAction = () => {
     
     const setFeedState = useSetRecoilState(feedState)
-    const postsDispatcher = usePostsAction()
+    const { setPosts, setPost } = usePostsAction()
 
     const resetFeed = () => {
         setFeedState({
@@ -17,7 +17,7 @@ const useFeedAction = () => {
     }
 
     const setFeed = ({posts, currentPage, lastPage}) => {
-        postsDispatcher(SET_POSTS, {posts})
+        setPosts(posts)
         setFeedState(({postIds}) => ({
             currentPage,
             lastPage,
@@ -26,7 +26,7 @@ const useFeedAction = () => {
     }
 
     const prependPost = (post) => {
-        postsDispatcher(SET_POST, {post})
+        setPost(post)
         setFeedState(({postIds, ...feed}) => {
             return {
                 ...feed,
