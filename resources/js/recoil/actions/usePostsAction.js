@@ -1,7 +1,7 @@
 import { useSetRecoilState } from "recoil"
 import postsState from "../states/postsState"
 import _ from 'lodash'
-import useUsersAction, { SET_USERS } from "./useUsersAction"
+import useUsersAction from "./useUsersAction"
 import usePostsCommentIdsAction from "./usePostsCommentIdsAction"
 
 export const SET_POST = 'SET_POST'
@@ -9,12 +9,12 @@ export const SET_POST = 'SET_POST'
 const usePostsAction = () => {
     
     const setPostsState = useSetRecoilState(postsState)
-    const usersDispatcher = useUsersAction()
+    const { setUsers } = useUsersAction()
     const { setPostCommentIds } = usePostsCommentIdsAction()
 
     const setPosts = (newPosts) => {
         const users = _.compact(_.map(newPosts,'user'))                
-        usersDispatcher(SET_USERS, {users})
+        setUsers(users)
 
         newPosts.forEach(({id, comments}) => {
             if(comments) setPostCommentIds(id, comments)

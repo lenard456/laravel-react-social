@@ -1,16 +1,16 @@
 import { useSetRecoilState } from "recoil"
 import commentsState from "../states/commentsState"
 import _ from 'lodash'
-import useUsersAction, { SET_USERS } from "./useUsersAction"
+import useUsersAction from "./useUsersAction"
 
 const useCommentsAction = () => {
 
     const setCommentsState = useSetRecoilState(commentsState)
-    const usersDispatcher = useUsersAction()
+    const { setUsers } = useUsersAction()
 
     const setComments = (comments) => {
         const users = _.compact(_.map(comments, 'user'))
-        usersDispatcher(SET_USERS, {users})
+        setUsers(users)
         const commentsObject = _.keyBy(comments.map(({user, ...comment}) => comment), 'id')
         setCommentsState(comments => ({...comments, ...commentsObject}))
     }
