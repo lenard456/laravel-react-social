@@ -4,7 +4,7 @@ import { useApi } from "../hooks";
 import { useCurrentUserFollowingIds, useIsFollowedByCurrentUser } from "../recoil/selectors/currentUserSelector";
 import { Button } from 'antd'
 import { CheckOutlined, UserAddOutlined } from '@ant-design/icons'
-import useFollowingIdsAction, { APPEND_FOLLOWING_ID, REMOVE_FOLLOWING_ID } from '../recoil/actions/useFollowingIdsAction';
+import useFollowingIdsAction from '../recoil/actions/useFollowingIdsAction';
 import { useRecoilValue } from 'recoil';
 import authState from '../recoil/states/authState';
 
@@ -19,20 +19,14 @@ export default function FollowButton({ userId, ...props }) {
     const isFollowedByCurrentUser = useIsFollowedByCurrentUser(userId)
     const { currentUserId  } = useRecoilValue(authState)
     const { execute, isLoading, status, setStatus } = useApi(toggleFollow)
-    const followingIdsDispatcher = useFollowingIdsAction()
+    const { appendFollowingId, removeFollowingId } = useFollowingIdsAction()
 
     useEffect(() => {
         if (status == 'success') {
             if (isFollowedByCurrentUser) {
-                followingIdsDispatcher(REMOVE_FOLLOWING_ID, {
-                    userId: currentUserId,
-                    followingId: userId
-                })
+                removeFollowingId(currentUserId, userId)
             } else {
-                followingIdsDispatcher(APPEND_FOLLOWING_ID, {
-                    userId: currentUserId,
-                    followingId: userId
-                })
+                appendFollowingId(currentUserId, userId)
             }
             setStatus('idle')
         } 

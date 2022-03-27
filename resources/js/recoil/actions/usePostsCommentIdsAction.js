@@ -1,45 +1,37 @@
 import { useSetRecoilState } from "recoil"
 import postsCommentIdsState from "../states/postsCommentIdsState"
-import useCommentsAction, { SET_COMMENT, SET_COMMENTS } from "./useCommentsAction"
-
-export const SET_POST_COMMENT_IDS = 'SET_POST_COMMENT_IDS'
-export const APPEND_POST_COMMENT_IDS = 'APPEND_POST_COMMENT_IDS'
+import useCommentsAction from "./useCommentsAction"
 
 const usePostsCommentIdsAction = () => {
 
     const setPostsCommentIds = useSetRecoilState(postsCommentIdsState)
-    const commentsDispatcher = useCommentsAction()
+    const { setComments, setComment } = useCommentsAction()
 
-    const dispatch = (type, payload) => {
-        switch(type) {
-            case SET_POST_COMMENT_IDS: {
-                const { comments, postId } = payload
-                commentsDispatcher(SET_COMMENTS,{comments})
-                setPostsCommentIds(postsCommentIds => {
-                    return {
-                        ...postsCommentIds,
-                        [postId]: comments.map(comment => comment.id)
-                    }
-                })
-                break;
+    const setPostCommentIds = (postId, comments) => {
+        setComments(comments)
+        setPostsCommentIds(postsCommentIds => {
+            return {
+                ...postsCommentIds,
+                [postId]: comments.map(comment => comment.id)
             }
-
-            case APPEND_POST_COMMENT_IDS: {
-                const { postId, comment } = payload
-                commentsDispatcher(SET_COMMENT, {comment})
-                setPostsCommentIds(postsCommentIds => {
-                    const commentIds = postsCommentIds[postId]
-                    return {
-                        ...postsCommentIds,
-                        [postId]: [...commentIds, comment.id]
-                    }
-                })
-                break;
-            }
-        }
+        })
     }
 
-    return dispatch
+    const appendPostCommentIds = (postId, comment) => {
+        setComment(comment)
+        setPostsCommentIds(postsCommentIds => {
+            const commentIds = postsCommentIds[postId]
+            return {
+                ...postsCommentIds,
+                [postId]: [...commentIds, comment.id]
+            }
+        })
+    }
+
+    return {
+        setPostCommentIds,
+        appendPostCommentIds
+    }
 }
 
 export default usePostsCommentIdsAction

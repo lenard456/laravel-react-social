@@ -4,12 +4,12 @@ import AuthApi from '@apis/AuthApi'
 import { useApi } from '@/js/hooks'
 import { useRecoilValue } from 'recoil'
 import currentUserSelector from '@/js/recoil/selectors/currentUserSelector'
-import useAuthActions, { REMOVE_CURRENT_USER } from '@/js/recoil/actions/useAuthActions'
+import useAuthActions from '@/js/recoil/actions/useAuthActions'
 import { Link } from 'react-router-dom'
 
 export default ({ setIsOpen }) => {
     const { execute:logout, message, navigate } = useApi(AuthApi.logout) 
-    const authDispatcher = useAuthActions()
+    const { removeCurrentUser } = useAuthActions()
     const currentUser = useRecoilValue(currentUserSelector)
 
     const menuClicked = ({key}) => {
@@ -21,7 +21,7 @@ export default ({ setIsOpen }) => {
                 async onOk() {
                     await logout()
                     message.success('Logout successully')
-                    authDispatcher(REMOVE_CURRENT_USER)
+                    removeCurrentUser()
                     navigate('/login')
                 }
             })

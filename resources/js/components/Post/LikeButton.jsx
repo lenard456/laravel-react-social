@@ -6,7 +6,7 @@ import _ from 'lodash'
 import { useRecoilValue } from 'recoil'
 import { useApi } from '@/js/hooks'
 import authState from '@/js/recoil/states/authState'
-import usePostsAction, { SET_POST_LIKER_IDS } from '@/js/recoil/actions/usePostsAction'
+import usePostsAction from '@/js/recoil/actions/usePostsAction'
 
 const toggleLike = async(isLiked, postId) => {
     if (isLiked) {
@@ -20,16 +20,13 @@ export default function ({ post }) {
     const { isLoading, status, data:newLikerIds, execute } = useApi(toggleLike)
 
     const { likerIds, id } = post
-    const postsDispatcher = usePostsAction()
+    const { setPostLikerIds } = usePostsAction()
     const { currentUserId } = useRecoilValue(authState);
     const isLiked = useMemo(() => likerIds.some(liker_id => liker_id == currentUserId), [likerIds])
 
     useEffect(() => {
         if (status == 'success') {
-            postsDispatcher(SET_POST_LIKER_IDS, {
-                postId: id,
-                likerIds: newLikerIds
-            })
+            setPostLikerIds(id, newLikerIds)
         }
     }, [status])
 

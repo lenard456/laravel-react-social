@@ -6,7 +6,7 @@ import { AuthApi } from '@/js/apis'
 import { Navigate, Outlet } from 'react-router-dom'
 import { useRecoilValue } from 'recoil'
 import authState from '@/js/recoil/states/authState'
-import useAuthActions, { SET_CURRENT_USER } from '@/js/recoil/actions/useAuthActions'
+import useAuthActions from '@/js/recoil/actions/useAuthActions'
 
 const Validating = () => {
     return (
@@ -20,12 +20,12 @@ const Validating = () => {
 const AuthenticatedUserOnly = () => {
     const { isLoading, execute, data:user, isSuccess } = useApi(AuthApi.fetchCurrentUser)
     const { isAuthenticated, currentUserId  } = useRecoilValue(authState)
-    const authDispatcher = useAuthActions()
+    const { setCurrentUser } = useAuthActions()
     const isValidated = currentUserId !== null
 
     useEffect(() => {
         if (isSuccess) {
-            authDispatcher(SET_CURRENT_USER, {user})
+            setCurrentUser(user)
         }
     }, [isSuccess])
 

@@ -4,10 +4,10 @@ import { comment } from '@/js/apis/PostApi'
 import { useRecoilValue } from 'recoil'
 import { useApi } from '@/js/hooks'
 import currentUserSelector from '@/js/recoil/selectors/currentUserSelector'
-import usePostsCommentIdsAction, { APPEND_POST_COMMENT_IDS } from '@/js/recoil/actions/usePostsCommentIdsAction'
+import usePostsCommentIdsAction from '@/js/recoil/actions/usePostsCommentIdsAction'
 
 export default function ({post}) {
-    const postsCommentIdsDispatcher = usePostsCommentIdsAction()
+    const { appendPostCommentIds } = usePostsCommentIdsAction()
     const { isLoading, execute, status, data } = useApi(comment)
     const currentUser = useRecoilValue(currentUserSelector)
     const [ content, setContent ] = useState('')
@@ -15,10 +15,7 @@ export default function ({post}) {
     
     useEffect(() => {
         if (status == 'success') {
-            postsCommentIdsDispatcher(APPEND_POST_COMMENT_IDS, {
-                postId: post.id,
-                comment: data
-            })
+            appendPostCommentIds(post.id, data)
         }
     }, [status])
 

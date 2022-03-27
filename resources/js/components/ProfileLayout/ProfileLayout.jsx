@@ -4,21 +4,21 @@ import { NavLink, Outlet, useParams } from 'react-router-dom'
 import useUser from '@/js/recoil/selectors/useUser'
 import { useApi } from '@/js/hooks'
 import { fetchUser } from '@/js/apis/UserApi'
-import useUsersAction, { SET_USER } from '@/js/recoil/actions/useUsersAction'
+import useUsersAction from '@/js/recoil/actions/useUsersAction'
 import ProfileSkeleton from './components/Skeleton'
 import FollowButton from '../FollowButton'
 import useUserFollowingIds from '@/js/recoil/selectors/useUserFollowings'
 
 export default () => {
     const { execute, isSuccess, data, isLoading } = useApi(fetchUser)
-    const usersDispatcher = useUsersAction()
+    const { setUser } = useUsersAction()
     const { id } = useParams()
     const { userFollowingCount } = useUserFollowingIds(id)
     const user = useUser(id)
 
     useEffect(() => {
         if (isSuccess) {
-            usersDispatcher(SET_USER, {user:data})
+            setUser(data)
         }
     }, [isSuccess])
 

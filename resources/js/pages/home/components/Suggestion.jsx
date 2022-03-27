@@ -3,16 +3,16 @@ import { List } from "antd";
 import { fetchSuggestions } from '@/js/apis/UserApi';
 import UserItem from '@/js/components/UserItem';
 import { useApi } from '@/js/hooks';
-import useUsersAction, { SET_USERS } from '@/js/recoil/actions/useUsersAction';
+import useUsersAction from '@/js/recoil/actions/useUsersAction';
 
 export default function () {
-    const usersDispatcher = useUsersAction()
+    const { setUsers } = useUsersAction()
     const [suggestions, setSuggestions] = useState([])
     const { isLoading, data, status } = useApi(fetchSuggestions, { executeOnMount: true })
 
     useEffect(() => {
         if (status === 'success') {
-            usersDispatcher(SET_USERS, {users:data})
+            setUsers(data)
             setSuggestions(data)
         }
     },[status])

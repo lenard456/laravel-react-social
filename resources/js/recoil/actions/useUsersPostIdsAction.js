@@ -1,14 +1,14 @@
 import { useSetRecoilState } from "recoil"
 import usersPostIdsState from "../states/usersPostIdsState"
-import usePostsAction, { SET_POSTS } from "./usePostsAction"
+import usePostsAction from "./usePostsAction"
 
 const useUsersPostIdsAction = () => {
 
     const setUsersPostIds = useSetRecoilState(usersPostIdsState)
-    const postsDispatcher = usePostsAction()
+    const { setPosts } = usePostsAction()
 
     const setUserPostIds = (userId, {currentPage, lastPage, posts}) => {
-        postsDispatcher(SET_POSTS, {posts})
+        setPosts(posts)
         setUsersPostIds(usersPostIds => {
             const {postIds} = usersPostIds[userId] || {postIds:[]}
             return {

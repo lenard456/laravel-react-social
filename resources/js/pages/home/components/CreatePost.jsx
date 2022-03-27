@@ -5,11 +5,11 @@ import { createPost } from '@/js/apis/PostApi'
 import { useApi } from '@/js/hooks'
 import { useRecoilValue } from 'recoil'
 import currentUserSelector from '@/js/recoil/selectors/currentUserSelector'
-import useFeedAction, { PREPEND_POST } from '@/js/recoil/actions/useFeedAction'
+import useFeedAction from '@/js/recoil/actions/useFeedAction'
 
 export default function(){
     const { avatar } = useRecoilValue(currentUserSelector)
-    const feedDispatcher = useFeedAction()
+    const { prependPost } = useFeedAction()
     const [ content, setContent ] = useState('')
     const { data, isLoading, execute, status, message } = useApi(createPost)
 
@@ -17,7 +17,7 @@ export default function(){
         if (status === 'success') {
             message.success('Successfully posted')
             setContent('')
-            feedDispatcher(PREPEND_POST, {post: data})
+            prependPost(data)
         }
     },[status])
 
