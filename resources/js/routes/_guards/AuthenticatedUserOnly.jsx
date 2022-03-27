@@ -17,49 +17,17 @@ const Validating = () => {
     )
 }
 
-
-// const AuthenticatedUserOnly = () => {
-//     const { isLoading, execute, status, data:user } = useApi(AuthApi.fetchCurrentUser)
-//     const { isAuthenticated, isValidated, dispatch } = useAuthState()
-
-//     useEffect(() => {
-//         if (status == 'success') {
-//             dispatch('SET_USER', user)
-//         }
-//     }, [status])
-
-//     useEffect(() => {
-//         if (isAuthenticated && !isValidated) {
-//             execute()
-//         }
-//     }, [])
-
-//     if (isLoading) {
-//         return <Validating />
-//     }
-    
-//     if (!isAuthenticated) {
-//         return <Navigate to="/login" />
-//     }
-
-//     if (isValidated) {
-//         return <Outlet />
-//     }
-
-//     return null
-// }
-
 const AuthenticatedUserOnly = () => {
-    const { isLoading, execute, status, data:user } = useApi(AuthApi.fetchCurrentUser)
+    const { isLoading, execute, data:user, isSuccess } = useApi(AuthApi.fetchCurrentUser)
     const { isAuthenticated, currentUserId  } = useRecoilValue(authState)
     const authDispatcher = useAuthActions()
     const isValidated = currentUserId !== null
 
     useEffect(() => {
-        if (status == 'success') {
+        if (isSuccess) {
             authDispatcher(SET_CURRENT_USER, {user})
         }
-    }, [status])
+    }, [isSuccess])
 
     useEffect(() => {
         if (isAuthenticated && !isValidated) {

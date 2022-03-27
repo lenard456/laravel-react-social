@@ -5,6 +5,7 @@ import usePostsAction, { SET_POST, SET_POSTS } from "./usePostsAction"
 
 export const SET_FEED = 'SET_FEED'
 export const PREPEND_POST = 'PREPEND_POST'
+export const RESET_FEED = 'RESET_FEED'
 
 const useFeedAction = () => {
     
@@ -13,6 +14,15 @@ const useFeedAction = () => {
 
     const dispatch = (type, payload) => {
         switch (type) {
+
+            case RESET_FEED : {
+                setFeedState({
+                    currentPage: 0,
+                    lastPage: null,
+                    postIds: []
+                })
+                break;
+            }
 
             case SET_FEED: {
                 const { posts, currentPage, lastPage } = payload

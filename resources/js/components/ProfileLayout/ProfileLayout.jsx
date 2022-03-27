@@ -1,8 +1,30 @@
+import { useEffect } from 'react'
 import { Avatar, Card } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useParams } from 'react-router-dom'
+import useUser from '@/js/recoil/selectors/useUser'
+import { useApi } from '@/js/hooks'
+import { fetchUser } from '@/js/apis/UserApi'
+import useUsersAction, { SET_USER } from '@/js/recoil/actions/useUsersAction'
+import ProfileSkeleton from './components/Skeleton'
 
 export default () => {
+    const { execute, isSuccess, data, isLoading } = useApi(fetchUser)
+    const usersDispatcher = useUsersAction()
+    const { id } = useParams()
+    const user = useUser(id)
+
+    useEffect(() => {
+        if (isSuccess) {
+            usersDispatcher(SET_USER, {user:data})
+        }
+    }, [isSuccess])
+
+    useEffect(() => {
+        execute(id)
+    },[id])
+
+    if (!user) return <ProfileSkeleton/>
+
     return (
         <>
             <div className='h-60 lg:h-80 bg-gray-500 relative'>
@@ -13,18 +35,17 @@ export default () => {
 
                 <div className='flex flex-col items-center lg:items-end gap-4 lg:flex-row translate'>
                     <div>
-                        <Avatar className='border-2 border-white' size={224} icon={<UserOutlined />} />
+                        <Avatar className='border-2 border-white' size={224} src={user.avatar} />
                     </div>
                     <div className='flex flex-col gap-2'>
                         <div className='flex flex-col items-center lg:flex-row'>
-                            <div className='text-3xl font-bold text-gray-800'>Lenard Mangay-ayam</div>
+                            <div className='text-3xl font-bold text-gray-800'>{user.name}</div>
                         </div>
                         <div className='profile-navlinks'>
-                            <NavLink to='/profile/2' end className='profile-navlinks-item'>Post</NavLink>
-                            <NavLink to='/profile/2/about' className='profile-navlinks-item'>About</NavLink>
-                            <NavLink to='/profile/2/following' className='profile-navlinks-item'>Following</NavLink>
-                            <NavLink to='/profile/2/follower' className='profile-navlinks-item'>Follower</NavLink>
-                            <NavLink to='/profile/2/saved' className='profile-navlinks-item'>Saved</NavLink>
+                            <NavLink to={`/profile/${id}`} end className='profile-navlinks-item'>Post</NavLink>
+                            <NavLink to={`/profile/${id}/about`} className='profile-navlinks-item'>About</NavLink>
+                            <NavLink to={`/profile/${id}/following`} className='profile-navlinks-item'>Following</NavLink>
+                            <NavLink to={`/profile/${id}/follower`} className='profile-navlinks-item'>Follower</NavLink>
                         </div>
                     </div>
                 </div>
@@ -37,7 +58,7 @@ export default () => {
                     </div>
 
                     <div className='col-span-2'>
-                        <Outlet />
+                        <Outlet/>
                     </div>
 
 

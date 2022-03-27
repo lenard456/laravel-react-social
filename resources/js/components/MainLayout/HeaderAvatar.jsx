@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Dropdown, Avatar } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
 import AvatarMenu from './HeaderAvatarMenu'
 import { useRecoilValue } from 'recoil'
 import currentUserSelector from '@/js/recoil/selectors/currentUserSelector'

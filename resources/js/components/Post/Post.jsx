@@ -17,7 +17,7 @@ export default function({ children, post }) {
                 <Avatar size='large' src={user.avatar}/>
                 <div className='flex justify-between'>
                     <div className='flex flex-col leading-3'>
-                        <span className='font-bold'>{ user.name} </span>
+                        <Link to={`/profile/${user_id}`} className='font-bold'>{user.name} </Link>
                         <span className='text-sm'>{ moment(created_at).fromNow() }</span>
                     </div>
                 </div>

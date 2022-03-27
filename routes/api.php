@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
@@ -33,8 +32,10 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/posts/{post}/unlike', [PostController::class, 'unlike']);
     Route::post('/posts/{post}/comment', [PostController::class, 'comment']);
 
-    Route::post('/users/{user}/follow', [UserController::class, 'follow']);
     Route::get('/users/suggestions', [UserController::class, 'suggestions']);
+    Route::get('/users/{user}', [UserController::class, 'view']);
+    Route::get('/users/{user}/posts', [UserController::class, 'posts']);
+    Route::post('/users/{user}/follow', [UserController::class, 'follow']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 

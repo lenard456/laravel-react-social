@@ -1,9 +1,8 @@
 import CreatePost from './components/CreatePost'
-import { Post } from '@/js/components'
 import Suggestion from './components/Suggestion'
 import useHomePageLogic from './useHomePageLogic'
-import { List, Skeleton } from 'antd'
-import LoadMore from './components/LoadMore'
+import LoadMore from '../../components/LoadMore'
+import PostsList from '@/js/components/PostsList/PostsList'
 
 export default function () {
 
@@ -18,17 +17,12 @@ export default function () {
 
                     <CreatePost />
 
-                    <List
-                        loading={initLoading}
-                        dataSource={posts}
-                        renderItem={post => (
-                            <List.Item>
-                                <Post post={post} />
-                            </List.Item>
-                        )}
+                    <PostsList 
+                        posts={posts}
+                        initLoading={initLoading}
                         loadMore={<LoadMore hasNext={hasNext} seeMore={seeMore} isLoading={isLoading} />}
+                        isLoading={isLoading}
                     />
-                    <Skeleton loading={!initLoading && isLoading} active />
                 </div>
 
             </div>

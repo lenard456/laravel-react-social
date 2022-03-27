@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
 
+    public function view(User $user)
+    {
+        return $user->append('followingIds', 'followerIds');
+    }
+
     public function suggestions()
     {
         return Auth::user()->notFollowing()->inRandomOrder()->limit(10)->get();
@@ -25,5 +30,11 @@ class UserController extends Controller
     {
         $user = Auth::user()->append('followingIds', 'followerIds');
         return $user;
+    }
+
+    public function posts(User $user)
+    {
+        $posts = $user->posts()->latest()->paginate(10);
+        return $posts;
     }
 }
