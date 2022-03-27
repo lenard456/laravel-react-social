@@ -1,7 +1,7 @@
 import { atom } from "recoil"
 
 const commentsState = atom({
-    key: 'v2.comments',
+    key: 'comments',
     default: {}
 })
 

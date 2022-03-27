@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
 const usersPostIdsState = atom({
-    key: 'v2.usersPostIds',
+    key: 'usersPostIds',
     default: {}
 })
 

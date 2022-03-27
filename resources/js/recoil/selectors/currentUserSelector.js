@@ -6,7 +6,7 @@ import useUserFollowingIds from "./useUserFollowings";
 
 
 const currentUserSelector = selector({
-    key: 'v2.currentUser',
+    key: 'currentUser',
     get: ({get}) => {
         const { currentUserId } = get(authState)
         const users = get(usersState)

@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
 const followingIdsState = atom({
-    key: 'v2.followingIds',
+    key: 'followingIds',
     default: {}
 })
 

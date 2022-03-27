@@ -3,7 +3,7 @@ import feedState from "../states/feedState";
 import postsState from "../states/postsState";
 
 const feedPostsSelector = selector({
-    key: 'v2.feedPosts',
+    key: 'feedPosts',
     get: ({get}) => {
         const { postIds } = get(feedState)
         const posts  = get(postsState)

@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
 const feedState = atom({
-    key: 'v2.feed',
+    key: 'feed',
     default: {
         currentPage: 0,
         lastPage: null,
