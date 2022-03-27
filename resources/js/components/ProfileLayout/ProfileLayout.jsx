@@ -8,12 +8,16 @@ import useUsersAction from '@/js/recoil/actions/useUsersAction'
 import ProfileSkeleton from './components/Skeleton'
 import FollowButton from '../FollowButton'
 import useUserFollowingIds from '@/js/recoil/selectors/useUserFollowings'
+import useUserFollowerIds from '@/js/recoil/selectors/useUserFollowerIds'
+import { useIsCurrentUserFollower } from '@/js/recoil/selectors/currentUserSelector'
 
 export default () => {
-    const { execute, isSuccess, data, isLoading } = useApi(fetchUser)
+    const { execute, isSuccess, data } = useApi(fetchUser)
     const { setUser } = useUsersAction()
     const { id } = useParams()
-    const { userFollowingCount } = useUserFollowingIds(id)
+    const followingIds = useUserFollowingIds(id)
+    const followerIds = useUserFollowerIds(id)
+    const isCurrentUserFollower = useIsCurrentUserFollower(id)
     const user = useUser(id)
 
     useEffect(() => {
@@ -42,7 +46,10 @@ export default () => {
                     </div>
                     <div className='flex flex-col gap-2 w-full'>
                         <div className='flex flex-col items-center justify-between lg:flex-row'>
-                            <div className='text-3xl font-bold text-gray-800'>{user.name}</div>
+                            <div className='flex items-end gap-1'>
+                                <div className='text-3xl font-bold text-gray-800'>{user.name}</div>
+                                {isCurrentUserFollower && <div>Follows you</div>}
+                            </div>
                             <div>
                                 <FollowButton size='large' userId={user.id}/>
                             </div>
@@ -51,9 +58,11 @@ export default () => {
                             <NavLink to={`/profile/${id}`} end className='profile-navlinks-item'>Post</NavLink>
                             <NavLink to={`/profile/${id}/about`} className='profile-navlinks-item'>About</NavLink>
                             <NavLink to={`/profile/${id}/following`} className='profile-navlinks-item'>
-                                <span className='text-blue-500'>{userFollowingCount}</span> Following
+                                <span className='text-blue-500'>{followingIds.length}</span> Following
                             </NavLink>
-                            <NavLink to={`/profile/${id}/follower`} className='profile-navlinks-item'>Follower</NavLink>
+                            <NavLink to={`/profile/${id}/follower`} className='profile-navlinks-item'>
+                                <span className='text-blue-500'>{followerIds.length}</span> Follower
+                            </NavLink>
                         </div>
                     </div>
                 </div>

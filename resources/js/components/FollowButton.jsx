@@ -1,7 +1,7 @@
-import { useMemo, useEffect } from 'react'
+import { useEffect } from 'react'
 import { followUser, unFollowUser } from "../apis/UserApi";
 import { useApi } from "../hooks";
-import { useCurrentUserFollowingIds, useIsFollowedByCurrentUser } from "../recoil/selectors/currentUserSelector";
+import { useIsFollowedByCurrentUser } from "../recoil/selectors/currentUserSelector";
 import { Button } from 'antd'
 import { CheckOutlined, UserAddOutlined } from '@ant-design/icons'
 import useFollowingIdsAction from '../recoil/actions/useFollowingIdsAction';
