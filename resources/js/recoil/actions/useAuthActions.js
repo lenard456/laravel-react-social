@@ -1,14 +1,14 @@
 import { Cache } from "@/js/utils"
 import { useSetRecoilState } from "recoil"
 import authState from "../states/authState"
-import useFeedAction, { RESET_FEED } from "./useFeedAction"
+import useFeedAction from "./useFeedAction"
 import useUsersAction, { SET_USER } from "./useUsersAction"
 
 const useAuthActions = () => {
 
     const setAuthState = useSetRecoilState(authState)
     const usersDispatcher = useUsersAction()
-    const feedDispatcher = useFeedAction()
+    const { resetFeed } = useFeedAction()
 
     const setCurrentUser = (user) => {
         usersDispatcher(SET_USER, {user})
@@ -26,7 +26,7 @@ const useAuthActions = () => {
     }
 
     const removeCurrentUser = () => {
-        feedDispatcher(RESET_FEED)
+        resetFeed()
         setAuthState({
             isAuthenticated: Cache.set('isAuthenticated', false),
             currentUserId: null
