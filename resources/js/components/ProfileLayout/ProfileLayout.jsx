@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Avatar, Card } from 'antd'
+import { Avatar, Badge, Card } from 'antd'
 import { NavLink, Outlet, useParams } from 'react-router-dom'
 import useUser from '@/js/recoil/selectors/useUser'
 import { useApi } from '@/js/hooks'
@@ -48,7 +48,7 @@ export default () => {
                         <div className='flex flex-col items-center justify-between lg:flex-row'>
                             <div className='flex items-end gap-1'>
                                 <div className='text-3xl font-bold text-gray-800'>{user.name}</div>
-                                {isCurrentUserFollower && <div>Follows you</div>}
+                                {isCurrentUserFollower && <Badge style={{backgroundColor: 'rgb(75 85 99 / var(--tw-bg-opacity))'}} count='Follows you'/>}
                             </div>
                             <div>
                                 <FollowButton size='large' userId={user.id}/>
