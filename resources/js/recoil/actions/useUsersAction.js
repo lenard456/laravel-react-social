@@ -1,14 +1,14 @@
 import { useSetRecoilState } from "recoil"
 import usersState from "../states/usersState"
 import _ from 'lodash'
-import useFollowingIdsAction, { SET_FOLLOWING_IDS } from "./useFollowingIdsAction"
+import useFollowingIdsAction from "./useFollowingIdsAction"
 
 export const SET_USER = 'SET_USER'
 export const SET_USERS = 'SET_USERS'
 
 const useUsersAction = () => {
     const setUsersState = useSetRecoilState(usersState)
-    const followingIdsDispatcher = useFollowingIdsAction()
+    const { setFollowingIds } = useFollowingIdsAction()
 
     const dispatch = (type, payload) => {
         switch(type){
@@ -18,10 +18,7 @@ const useUsersAction = () => {
                 
                 newUsers.forEach(user => {
                     if (user.followingIds) {
-                        followingIdsDispatcher(SET_FOLLOWING_IDS, {
-                            userId: user.id,
-                            followingIds: user.followingIds
-                        })
+                        setFollowingIds(user.id, user.followingIds)
                     }
                 });
                 

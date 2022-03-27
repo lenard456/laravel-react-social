@@ -16,7 +16,6 @@ const useCommentsAction = () => {
     }
 
     const setComment = (comment) => {
-        const { comment } = payload
         setComments([comment])
     }
 
