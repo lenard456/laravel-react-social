@@ -3,13 +3,19 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
+  - name: Server
   - init: |
         composer install-php8.1
         composer install
         npm install
-    command: |
-        composer install-php8.1
         touch database/database.sqlite
         php artisan migrate:fresh --seed
-        npm run dev
+    command: |
+        composer install-php8.1
+        php artisan serve
+
+  - name: Client
+    command: |
+        gp await-port 8000
+        npm run dev -- --mode=gitpod
 
