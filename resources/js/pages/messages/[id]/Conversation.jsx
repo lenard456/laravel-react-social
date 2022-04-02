@@ -2,18 +2,24 @@ import { useEffect } from 'react'
 import { fetchUser } from "@/js/apis/UserApi"
 import { useApi } from "@/js/hooks"
 import useUser from "@/js/recoil/selectors/useUser"
-import { Avatar, Comment, Input, PageHeader, Spin } from "antd"
+import { PageHeader, Spin } from "antd"
 import { useParams } from "react-router-dom"
-import { useRecoilValue } from 'recoil'
-import currentUserSelector from '@/js/recoil/selectors/currentUserSelector'
 import WriteMessage from './components/WriteMessage'
+import useUsersAction from '@/js/recoil/actions/useUsersAction'
+import MessagesList from './components/MessagesList'
 
 export default function Conversation()
 {
-    const { isLoading, execute } = useApi(fetchUser)
-    const currentUser = useRecoilValue(currentUserSelector)
+    const { execute, data, status } = useApi(fetchUser)
+    const { setUser } = useUsersAction()
     const { id } = useParams()
     const user = useUser(id)
+
+    useEffect(() => {
+        if (status === 'success') {
+            setUser(data)
+        }
+    }, [status])
 
     useEffect(() => {
         if (!user) {
@@ -35,8 +41,8 @@ export default function Conversation()
                     avatar={{src: user.avatar}}
                 />
 
-                <div className='flex-grow bg-yellow-300'>
-
+                <div className='flex-grow px-2'>
+                    <MessagesList id={id}/>
                 </div>
 
                 <WriteMessage id={id}/>
