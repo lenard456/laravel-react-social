@@ -40,7 +40,7 @@ export default function () {
     }
 
     return (
-        <div className='max-w-4xl mx-auto my-8 grid grid-cols-5 gap-8'>
+        <div className='max-w-4xl w-full mx-auto my-8 grid grid-cols-5 gap-8'>
             <div className='col-span-3'>
 
                 <Skeleton 

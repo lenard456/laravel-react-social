@@ -19,6 +19,11 @@ class UserController extends Controller
         return Auth::user()->notFollowing()->inRandomOrder()->limit(10)->get();
     }
 
+    public function conversations()
+    {
+        return Auth::user()->conversations();
+    }
+
     public function follow(User $user)
     {
         $user->followers()->detach(Auth::id()); //To prevent duplication

@@ -7,9 +7,11 @@ import {
     HomePage,
     PostPage,
     ProfileIndexPage,
-    ProfileFollowingPage
-} from '@pages/'
-import { MainLayout, ProfileLayout } from '@components'
+    ProfileFollowingPage,
+    MessagesPageIndex,
+    ConversationPage
+} from '@/js/pages/'
+import { MainLayout, ProfileLayout, MessagesLayout } from '@components'
 
 export default () => (
     <BrowserRouter>
@@ -24,6 +26,10 @@ export default () => (
                         <Route path='following' element={<ProfileFollowingPage />}/>
                         <Route path='follower' element={<div>Follower</div>}/>
                         <Route path='saved' element={<div>Saved</div>}/>
+                    </Route>
+                    <Route path='messages' element={<MessagesLayout />}>
+                        <Route index element={<MessagesPageIndex />} />
+                        <Route path=':id' element={<ConversationPage />} />
                     </Route>
                 </Route>
             </Route>

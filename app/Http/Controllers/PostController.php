@@ -32,9 +32,8 @@ class PostController extends Controller
     {
         $id = Auth::id();
         return Post::whereHas('user.followers', function($query) use ($id) {
-            $query->where('follower_id', $id)
-                  ->orWhere('user_id', $id);
-        })->latest()->paginate(10);
+            $query->where('follower_id', $id);
+        })->orWhere('user_id', $id)->latest()->paginate(10);
     }
 
     public function like(Post $post)

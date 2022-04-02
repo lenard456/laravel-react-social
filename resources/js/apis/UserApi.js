@@ -2,7 +2,12 @@ import Http, { requestCookie } from '@utils/Http'
 
 export const fetchSuggestions = async function() {
     await requestCookie()
-    return await Http.get('/users/suggestions');
+    return await Http.get('/user/suggestions');
+}
+
+export const fetchConversations = async () => {
+    await requestCookie()
+    return await Http.get(`/user/conversations`);
 }
 
 export const followUser = async function (userId) {

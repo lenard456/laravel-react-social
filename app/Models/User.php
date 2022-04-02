@@ -172,4 +172,45 @@ class User extends Authenticatable
             ->whereHas('user', fn($q) => $q->whereId($this->id))
             ->exists();
     }
+
+    public function threads()
+    {
+        return $this->belongsToMany(Thread::class);
+    }
+
+
+    public function threadWith(User $receiver) : Thread
+    {
+        $thread = $this->threads()->whereHas('members', fn($q) => $q->whereId($receiver->id))->first();
+
+        if (!$thread) {
+            $thread = $this->threads()->create();
+            $thread->attach($receiver->id);
+        }
+
+        return $thread;
+    }
+
+    public function conversations()
+    {
+        return $this->threads()
+            ->with('members')
+            ->get()
+            ->where('messages_count', '>', 0)
+            ->pluck('members') 
+            ->flatten()
+            ->where('id', '<>', $this->id)
+            ->values();
+    }
+
+    public function sendMessage(User $receiver, string $content)
+    {
+        $thread = $this->threadWith($receiver);
+        $message = new Message();
+        $message->content = $content;
+        $message->user()->associate($this);
+        $message->thread()->associate($thread);
+        $message->save();
+        return $message;
+    }
 }

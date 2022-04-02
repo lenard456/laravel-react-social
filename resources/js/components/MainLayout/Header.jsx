@@ -34,8 +34,10 @@ export default function () {
                 {/* Right Menu */}
                 <div>
                     <Button className='rounded-lg text-gray-400' icon={<BellOutlined />} />
-                    <Button className='ml-2 rounded-lg text-gray-400' icon={<MessageOutlined />} />
 
+                    <Link to='/messages'>
+                        <Button className='ml-2 rounded-lg text-gray-400' icon={<MessageOutlined />} />
+                    </Link>
                     <HeaderAvatar />
                 </div>
 
