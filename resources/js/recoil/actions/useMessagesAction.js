@@ -5,15 +5,26 @@ const useMessagesAction = () => {
 
     const setMessagesState = useSetRecoilState(messagesState)
 
-    const setMessages = (userId, messages) => {
-        setMessages(old => ({
+    const setMessages = (threadId, messages) => {
+        setMessagesState(old => ({
             ...old,
-            [userId]: messages
+            [threadId]: messages
         }))
     }
 
+    const appendMessages = (threadId, message) => {
+        setMessagesState(old => {
+            const messages = old[threadId] || []
+            return {
+                ...old,
+                [threadId]: [...messages, message]
+            }
+        })
+    }
+
     return {
-        setMessages
+        setMessages,
+        appendMessages
     }
 }
 

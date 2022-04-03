@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('threads', function (Blueprint $table) {
             $table->id();
+            $table->string('type')->default('direct');
+            $table->foreignId('user_id')->nullable();
             $table->timestamps();
         });
     }

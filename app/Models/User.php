@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -178,6 +179,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Thread::class);
     }
 
+    public function adminThreads()
+    {
+        if ($this->role === 'admin'){
+            return Thread::where('type', 'admin')->get();
+        }
+    }
 
     public function threadWith(User $receiver) : Thread
     {
@@ -185,7 +192,7 @@ class User extends Authenticatable
 
         if (!$thread) {
             $thread = $this->threads()->create();
-            $thread->attach($receiver->id);
+            $thread->members()->attach($receiver->id);
         }
 
         return $thread;
@@ -195,22 +202,28 @@ class User extends Authenticatable
     {
         return $this->threads()
             ->with('members')
-            ->get()
             ->where('messages_count', '>', 0)
-            ->pluck('members') 
-            ->flatten()
-            ->where('id', '<>', $this->id)
-            ->values();
+            ->get()
+            ->map(fn($thread) => new Conversation($thread));
+            // ->pluck('members') 
+            // ->flatten()
+            // ->where('id', '<>', $this->id)
+            // ->values();
     }
 
     public function sendMessage(User $receiver, string $content)
     {
         $thread = $this->threadWith($receiver);
+        return $this->sendMessageOn($thread, $content);
+    }
+
+    public function sendMessageOn(Thread $thread, string $content)
+    {
         $message = new Message();
         $message->content = $content;
         $message->user()->associate($this);
         $message->thread()->associate($thread);
         $message->save();
-        return $message;
+        return $message;        
     }
 }

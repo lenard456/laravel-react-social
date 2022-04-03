@@ -5,16 +5,20 @@ import { useState, useEffect } from 'react'
 import { SendOutlined } from "@ant-design/icons";
 import { useApi } from "@/js/hooks";
 import MessageApi from "@/js/apis/MessageApi";
+import useMessagesAction from "@/js/recoil/actions/useMessagesAction";
 
 export default function WriteMessage({ id }){
 
-    const { isLoading, data, status, execute } = useApi(MessageApi.send)
+    const { isLoading, data, status, execute, setStatus } = useApi(MessageApi.send)
     const [content, setContent] = useState('')
     const currentUser = useRecoilValue(currentUserSelector)
+    const { appendMessages } = useMessagesAction()
 
     useEffect(() => {
         if (status === 'success') {
             setContent('')
+            appendMessages(id, data)
+            setStatus('idle')
         }
     }, [status])
 

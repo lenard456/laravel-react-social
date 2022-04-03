@@ -9,6 +9,7 @@ class Thread extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['type', 'user_id'];
     protected $withCount = ['messages'];
 
     public function members()

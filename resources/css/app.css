@@ -47,3 +47,17 @@ a:hover {
 .profile-navlinks-item.active {
     @apply border-blue-500 text-gray-600; 
 }
+
+.scroller {
+    scrollbar-color: rgb(179, 179, 179) #f1f1f1; /* thumb and track color */
+    scrollbar-width: thin;
+}
+
+.scroller::-webkit-scrollbar { width: 5px; }
+.scroller::-webkit-scrollbar-track { background-color: #f1f1f1; }
+.scroller::-webkit-scrollbar-thumb { background-color: rgb(179, 179, 179); }
+
+/*Scroller will apply to child*/
+.child-scroller > div{
+    @apply scroller;
+}

@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 
-const conversationIdsState = atom({
-    key: 'conversationIds',
-    default: []
+const conversationsState = atom({
+    key: 'conversations',
+    default: {}
 })
 
-export default conversationIdsState
+export default conversationsState

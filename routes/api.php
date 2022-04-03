@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -43,6 +44,9 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::post('/messages/{user}', [MessageController::class, 'send']);
     Route::get('/messages/{user}', [MessageController::class, 'getMessages']);
+
+    Route::get('/threads/{thread}', [ThreadController::class, 'view']);
+    Route::post('/threads/{thread}',[ThreadController::class, 'send']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 

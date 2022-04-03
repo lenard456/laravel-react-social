@@ -4,22 +4,26 @@ import authState from "@/js/recoil/states/authState"
 import { useEffect, useState } from 'react'
 import { useRecoilValue } from "recoil"
 import moment from 'moment'
+import useMessages from "@/js/recoil/selectors/useMessages"
+import useMessagesAction from "@/js/recoil/actions/useMessagesAction"
 
-export default function MessagesList({ id })
+export default function MessagesList({ messages })
 {
-    const { execute, data, status } = useApi(fetchMessages)
-    const [messages, setMessages] = useState([])
+//    const { execute, data, status } = useApi(fetchMessages)
+    //const [messages, setMessages] = useState([])
+  //  const messages = useMessages(id)
+    //const { setMessages } = useMessagesAction()
     const { currentUserId } = useRecoilValue(authState)
 
-    useEffect(() => {
-        if (status === 'success') {
-            setMessages(data)
-        }
-    }, [status])
+    // useEffect(() => {
+    //     if (status === 'success') {
+    //         setMessages(id, data)
+    //     }
+    // }, [status])
 
-    useEffect(() => {
-        execute(id)
-    }, [id])
+    // useEffect(() => {
+    //     //execute(id)
+    // }, [])
 
     return (
         <>
@@ -27,7 +31,7 @@ export default function MessagesList({ id })
             messages.map(message => {
                 const isOwn = message.user_id === currentUserId
                 return (
-                    <div className={`flex flex-col m-3 ${isOwn ? 'items-end' : 'items-start'}`}>
+                    <div key={message.id} className={`flex flex-col m-3 ${isOwn ? 'items-end' : 'items-start'}`}>
                         <div
                             className='rounded-lg shadow'
                             style={{
